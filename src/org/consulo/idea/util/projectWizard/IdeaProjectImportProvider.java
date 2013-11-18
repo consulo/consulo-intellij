@@ -63,6 +63,6 @@ public class IdeaProjectImportProvider extends ProjectImportProvider
 	@Override
 	public String getFileSample()
 	{
-		return "<b>IntelliJ IDEA</b> project directory (.idea)";
+		return "<b>IntelliJ Platform</b> project directory (.idea)";
 	}
 }
