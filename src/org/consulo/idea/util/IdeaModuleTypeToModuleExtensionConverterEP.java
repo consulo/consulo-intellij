@@ -23,5 +23,5 @@ import com.intellij.util.KeyedLazyInstanceEP;
  * @since 16:22/15.06.13
  */
 public class IdeaModuleTypeToModuleExtensionConverterEP extends KeyedLazyInstanceEP<IdeaModuleTypeToModuleExtensionConverter> {
-  public static final ExtensionPointName<IdeaModuleTypeToModuleExtensionConverterEP> EP_NAME = ExtensionPointName.create("org.consulo.idea.moduleTypeToModuleExtensionConverter");
+  public static final ExtensionPointName<IdeaModuleTypeToModuleExtensionConverterEP> EP_NAME = ExtensionPointName.create("org.consulo.intellij.moduleTypeToModuleExtensionConverter");
 }

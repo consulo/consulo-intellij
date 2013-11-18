@@ -15,7 +15,7 @@
  */
 package org.consulo.idea.model;
 
-import com.intellij.openapi.roots.ContentFolderType;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 import com.intellij.util.containers.MultiMap;
 
 /**
@@ -24,7 +24,7 @@ import com.intellij.util.containers.MultiMap;
  */
 public class IdeaContentEntryModel {
   private final String myUrl;
-  private MultiMap<ContentFolderType, String> myContentFolderTypes = new MultiMap<ContentFolderType, String>();
+  private MultiMap<ContentFolderTypeProvider, String> myContentFolderTypes = new MultiMap<ContentFolderTypeProvider, String>();
 
   public IdeaContentEntryModel(String url) {
     myUrl = url;
@@ -34,11 +34,11 @@ public class IdeaContentEntryModel {
     return myUrl;
   }
 
-  public MultiMap<ContentFolderType, String> getContentFolderTypes() {
+  public MultiMap<ContentFolderTypeProvider, String> getContentFolderTypes() {
     return myContentFolderTypes;
   }
 
-  public void addFolder(String url2, ContentFolderType contentFolderType) {
+  public void addFolder(String url2, ContentFolderTypeProvider contentFolderType) {
     myContentFolderTypes.putValue(contentFolderType, url2);
   }
 }

@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 <idea-plugin version="2">
-  <id>org.consulo.idea</id>
+  <id>org.consulo.intellij</id>
   <name>IntelliJ Project Importer</name>
   <depends optional="true" config-file="org.consulo.java.xml">org.consulo.java</depends>
   <depends optional="true" config-file="org.consulo.devkit.xml">org.consulo.devkit</depends>
