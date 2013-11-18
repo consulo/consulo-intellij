@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,65 +15,80 @@
  */
 package org.consulo.idea;
 
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.util.io.FileUtilRt;
-import org.consulo.idea.model.*;
+import java.io.File;
+import java.util.Collection;
+import java.util.Map;
+
+import org.consulo.idea.model.IdeaLibraryModel;
+import org.consulo.idea.model.IdeaModuleModel;
+import org.consulo.idea.model.IdeaModuleTableModel;
+import org.consulo.idea.model.IdeaProjectLibraryTableModel;
+import org.consulo.idea.model.IdeaProjectModel;
 import org.consulo.projectImport.ProjectModelProcessor;
 import org.consulo.projectImport.model.ProjectModel;
 import org.consulo.projectImport.model.library.LibraryModel;
 import org.consulo.projectImport.model.library.OrderRootTypeModel;
 import org.consulo.projectImport.model.module.ModuleModel;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.Map;
+import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.util.io.FileUtilRt;
 
 /**
  * @author VISTALL
  * @since 17:42/19.06.13
  */
-public class IdeaProjectModelProcessor extends ProjectModelProcessor<IdeaProjectModel> {
+public class IdeaProjectModelProcessor extends ProjectModelProcessor<IdeaProjectModel>
+{
 
-  @Override
-  public void process(@NotNull IdeaProjectModel otherModel, @NotNull ProjectModel projectModel) {
-    // convert libraries
-    for(IdeaLibraryModel ideaLibraryModel : otherModel.getInstance(IdeaProjectLibraryTableModel.class).getLibraries()) {
-      LibraryModel libraryModel = new LibraryModel(ideaLibraryModel.getName());
-      for (Map.Entry<OrderRootType, Collection<String>> entry : ideaLibraryModel.getOrderRoots().entrySet()) {
-        for (String url : entry.getValue()) {
-          libraryModel.addUrl(fromIdeaOrderToConsuloOrderType(entry.getKey()), url);
-        }
-      }
+	@Override
+	public void process(@NotNull IdeaProjectModel otherModel, @NotNull ProjectModel projectModel)
+	{
+		// convert libraries
+		for(IdeaLibraryModel ideaLibraryModel : otherModel.getInstance(IdeaProjectLibraryTableModel.class).getLibraries())
+		{
+			LibraryModel libraryModel = new LibraryModel(ideaLibraryModel.getName());
+			for(Map.Entry<OrderRootType, Collection<String>> entry : ideaLibraryModel.getOrderRoots().entrySet())
+			{
+				for(String url : entry.getValue())
+				{
+					libraryModel.addUrl(fromIdeaOrderToConsuloOrderType(entry.getKey()), url);
+				}
+			}
 
-      projectModel.getLibraryTable().addLibrary(libraryModel);
-    }
+			projectModel.getLibraryTable().addLibrary(libraryModel);
+		}
 
-    // convert modules
-    for(IdeaModuleModel ideaModuleModel : otherModel.getInstance(IdeaModuleTableModel.class).getModules()) {
-      File moduleFile = new File(ideaModuleModel.getFilePath());
+		// convert modules
+		for(IdeaModuleModel ideaModuleModel : otherModel.getInstance(IdeaModuleTableModel.class).getModules())
+		{
+			File moduleFile = new File(ideaModuleModel.getFilePath());
 
-      ModuleModel moduleModel = new ModuleModel(FileUtilRt.getNameWithoutExtension(moduleFile.getName()), moduleFile.getParent());
+			ModuleModel moduleModel = new ModuleModel(FileUtilRt.getNameWithoutExtension(moduleFile.getName()), moduleFile.getParent());
 
-      projectModel.getModuleTable().addChild(moduleModel);
-    }
-  }
+			projectModel.getModuleTable().addChild(moduleModel);
+		}
+	}
 
-  @Override
-  public boolean isAccepted(Object o) {
-    return o instanceof IdeaProjectModel;
-  }
+	@Override
+	public boolean isAccepted(Object o)
+	{
+		return o instanceof IdeaProjectModel;
+	}
 
-  private static OrderRootTypeModel fromIdeaOrderToConsuloOrderType(@NotNull OrderRootType orderRootType) {
-    if(orderRootType == OrderRootType.CLASSES) {
-      return OrderRootTypeModel.BINARIES;
-    }
-    else if(orderRootType == OrderRootType.DOCUMENTATION) {
-      return OrderRootTypeModel.DOCUMENTATION;
-    }
-    else if(orderRootType == OrderRootType.SOURCES) {
-      return OrderRootTypeModel.SOURCES;
-    }
-    throw new UnsupportedOperationException(orderRootType.toString());
-  }
+	private static OrderRootTypeModel fromIdeaOrderToConsuloOrderType(@NotNull OrderRootType orderRootType)
+	{
+		if(orderRootType == OrderRootType.CLASSES)
+		{
+			return OrderRootTypeModel.BINARIES;
+		}
+		else if(orderRootType == OrderRootType.DOCUMENTATION)
+		{
+			return OrderRootTypeModel.DOCUMENTATION;
+		}
+		else if(orderRootType == OrderRootType.SOURCES)
+		{
+			return OrderRootTypeModel.SOURCES;
+		}
+		throw new UnsupportedOperationException(orderRootType.toString());
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,17 @@ import org.consulo.idea.model.IdeaLibraryModel;
  * @author VISTALL
  * @since 10:17/16.06.13
  */
-public class ModuleLibraryOrderEntryModel extends OrderEntryModel {
-  private final IdeaLibraryModel myLibraryModel;
+public class ModuleLibraryOrderEntryModel extends OrderEntryModel
+{
+	private final IdeaLibraryModel myLibraryModel;
 
-  public ModuleLibraryOrderEntryModel(IdeaLibraryModel libraryModel) {
-    myLibraryModel = libraryModel;
-  }
+	public ModuleLibraryOrderEntryModel(IdeaLibraryModel libraryModel)
+	{
+		myLibraryModel = libraryModel;
+	}
 
-  public IdeaLibraryModel getLibraryModel() {
-    return myLibraryModel;
-  }
+	public IdeaLibraryModel getLibraryModel()
+	{
+		return myLibraryModel;
+	}
 }

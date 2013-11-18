@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,34 @@
  */
 package org.consulo.idea.util.projectWizard;
 
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-
-import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 10:29/16.06.13
  */
-public class ChooseMainModuleStep extends ModuleWizardStep {
-  private final WizardContext myContext;
+public class ChooseMainModuleStep extends ModuleWizardStep
+{
+	private final WizardContext myContext;
 
-  public ChooseMainModuleStep(WizardContext context) {
+	public ChooseMainModuleStep(WizardContext context)
+	{
 
-    myContext = context;
-  }
+		myContext = context;
+	}
 
-  @Override
-  public JComponent getComponent() {
-    return new JLabel("test");
-  }
+	@Override
+	public JComponent getComponent()
+	{
+		return new JLabel("test");
+	}
 
-  @Override
-  public void updateDataModel() {
-  }
+	@Override
+	public void updateDataModel()
+	{
+	}
 }

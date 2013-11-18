@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,51 +15,61 @@
  */
 package org.consulo.idea.model;
 
+import org.jdom.Element;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.util.containers.MultiMap;
-import org.jdom.Element;
 
 /**
  * @author VISTALL
  * @since 9:47/16.06.13
  */
-public class IdeaLibraryModel {
-  private final MultiMap<OrderRootType, String> myOrderRoots = new MultiMap<OrderRootType, String>();
-  private String myName;
+public class IdeaLibraryModel
+{
+	private final MultiMap<OrderRootType, String> myOrderRoots = new MultiMap<OrderRootType, String>();
+	private String myName;
 
-  public IdeaLibraryModel() {
-  }
+	public IdeaLibraryModel()
+	{
+	}
 
-  public void load(IdeaProjectModel ideaProjectModel, Element element) {
-    final Element libraryElement = element.getChild("library");
+	public void load(IdeaProjectModel ideaProjectModel, Element element)
+	{
+		final Element libraryElement = element.getChild("library");
 
-    myName = libraryElement.getAttributeValue("name");
-    for (Element libraryEntry : libraryElement.getChildren()) {
-      final String libraryEntryName = libraryEntry.getName();
+		myName = libraryElement.getAttributeValue("name");
+		for(Element libraryEntry : libraryElement.getChildren())
+		{
+			final String libraryEntryName = libraryEntry.getName();
 
-      OrderRootType orderRootType = ideaProjectModel.findOrderRootType(libraryEntryName);
-      if (orderRootType != null) {
-        parse(libraryEntry, orderRootType);
-      }
-    }
-  }
+			OrderRootType orderRootType = ideaProjectModel.findOrderRootType(libraryEntryName);
+			if(orderRootType != null)
+			{
+				parse(libraryEntry, orderRootType);
+			}
+		}
+	}
 
-  private void parse(Element element, OrderRootType orderRootType) {
-    for (Element child : element.getChildren()) {
-      final String name = child.getName();
-      if ("root".equals(name)) {
-        final String url = child.getAttributeValue("url");
+	private void parse(Element element, OrderRootType orderRootType)
+	{
+		for(Element child : element.getChildren())
+		{
+			final String name = child.getName();
+			if("root".equals(name))
+			{
+				final String url = child.getAttributeValue("url");
 
-        myOrderRoots.putValue(orderRootType, url);
-      }
-    }
-  }
+				myOrderRoots.putValue(orderRootType, url);
+			}
+		}
+	}
 
-  public MultiMap<OrderRootType, String> getOrderRoots() {
-    return myOrderRoots;
-  }
+	public MultiMap<OrderRootType, String> getOrderRoots()
+	{
+		return myOrderRoots;
+	}
 
-  public String getName() {
-    return myName;
-  }
+	public String getName()
+	{
+		return myName;
+	}
 }

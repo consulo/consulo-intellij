@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,32 @@
  */
 package org.consulo.idea.util;
 
-import com.intellij.openapi.roots.ModuleRootModel;
 import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.roots.ModuleRootModel;
 
 /**
  * @author VISTALL
  * @since 16:25/15.06.13
  */
-public abstract class IdeaModuleTypeToModuleExtensionConverter {
-  public abstract void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel);
+public abstract class IdeaModuleTypeToModuleExtensionConverter
+{
+	public abstract void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel);
 
-  protected static void enableExtensionById(@NotNull String id, @NotNull ModuleRootModel rootModel) {
-    final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id);
-    if (provider == null) {
-      return;
-    }
+	protected static void enableExtensionById(@NotNull String id, @NotNull ModuleRootModel rootModel)
+	{
+		final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id);
+		if(provider == null)
+		{
+			return;
+		}
 
-    final MutableModuleExtension extension = (MutableModuleExtension)rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
+		final MutableModuleExtension extension = (MutableModuleExtension) rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
 
-    assert extension != null;
+		assert extension != null;
 
-    extension.setEnabled(true);
-  }
+		extension.setEnabled(true);
+	}
 }

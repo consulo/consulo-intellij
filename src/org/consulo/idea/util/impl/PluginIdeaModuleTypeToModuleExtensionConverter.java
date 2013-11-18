@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,20 @@
  */
 package org.consulo.idea.util.impl;
 
-import com.intellij.openapi.roots.ModuleRootModel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.roots.ModuleRootModel;
 
 /**
  * @author VISTALL
  * @since 16:29/15.06.13
  */
-public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTypeToModuleExtensionConverter {
-  @Override
-  public void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel) {
-    enableExtensionById("java", moduleRootModel);
-    enableExtensionById("consulo-plugin", moduleRootModel);
-  }
+public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTypeToModuleExtensionConverter
+{
+	@Override
+	public void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel)
+	{
+		enableExtensionById("java", moduleRootModel);
+		enableExtensionById("consulo-plugin", moduleRootModel);
+	}
 }

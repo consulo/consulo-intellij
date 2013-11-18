@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,22 @@
  */
 package org.consulo.idea.model;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 10:07/16.06.13
  */
-public abstract class IdeaLibraryTableModel {
-  private final List<IdeaLibraryModel> myModels = new ArrayList<IdeaLibraryModel>();
+public abstract class IdeaLibraryTableModel
+{
+	private final List<IdeaLibraryModel> myModels = new ArrayList<IdeaLibraryModel>();
 
-  @NotNull
-  public List<IdeaLibraryModel> getModels() {
-    return myModels;
-  }
+	@NotNull
+	public List<IdeaLibraryModel> getModels()
+	{
+		return myModels;
+	}
 }

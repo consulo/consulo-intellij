@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ import org.consulo.idea.model.orderEnties.ModuleSourceOrderEntryModel;
 import org.consulo.idea.model.orderEnties.OrderEntryModel;
 import org.consulo.idea.model.orderEnties.ProjectLibraryOrderEntryModel;
 import org.jdom.Attribute;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 import lombok.SneakyThrows;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -72,7 +72,11 @@ public class IdeaModuleModel implements IdeaParseableModel
 	@Override
 	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
 	{
-		final Document document = ideaProjectModel.loadDocument(new File(myFilePath));
+		val moduleFile = new File(myFilePath);
+		val document = ideaProjectModel.loadDocument(moduleFile);
+
+		IdeaProjectModel.expand("$MODULE_DIR$", moduleFile.getParentFile().getAbsolutePath(), document.getRootElement());
+
 		myModuleType = document.getRootElement().getAttributeValue("type");
 		XPath xpathExpression = XPath.newInstance("/module[@version='4']/component[@name='NewModuleRootManager']");
 		final Element componentNode = (Element) xpathExpression.selectSingleNode(document);

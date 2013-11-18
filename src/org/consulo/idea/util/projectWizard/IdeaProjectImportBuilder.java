@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,45 +16,32 @@
 package org.consulo.idea.util.projectWizard;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.Icon;
 
 import org.consulo.idea.IdeaConstants;
 import org.consulo.idea.IdeaIcons;
+import org.consulo.idea.model.IdeaModuleTableModel;
+import org.consulo.idea.model.IdeaProjectModel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP;
-import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.xpath.XPath;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.PathMacroManager;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
+import lombok.val;
 
 /**
  * @author VISTALL
@@ -99,173 +86,61 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 
 	@Nullable
 	@Override
-	public List<Module> commit(Project project, ModifiableModuleModel model, ModulesProvider modulesProvider, ModifiableArtifactModel artifactModel)
+	public List<Module> commit(Project project, ModifiableModuleModel originalModel, ModulesProvider modulesProvider,
+			ModifiableArtifactModel artifactModel)
 	{
-
-		final String projectPath = project.getBasePath();
-		File file = new File(projectPath, IdeaConstants.PROJECT_DIR);
+		val projectPath = project.getBasePath();
+		val file = new File(projectPath, IdeaConstants.PROJECT_DIR);
 		if(!file.exists())
 		{
 			return null;
 		}
-		List<Module> modules = Collections.emptyList();
-		try
+
+		val ideaProjectModel = new IdeaProjectModel(file);
+
+		val fromProjectStructure = originalModel != null;
+		val newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
+
+		val modules = new ArrayList<Module>();
+		for(val ideaModuleModel : ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules())
 		{
-			modules = loadModules(file, model, project);
-		}
-		catch(JDOMException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		return modules;
-	}
+			val moduleFile = new File(ideaModuleModel.getFilePath());
 
-	private static List<Module> loadModules(File ideaDir, ModifiableModuleModel modifiableModuleModel, Project project) throws JDOMException,
-			IOException
-	{
-		File modulesFile = new File(ideaDir, "modules.xml");
-		if(!modulesFile.exists())
-		{
-			return Collections.emptyList();
-		}
+			val module = newModel.newModule(FileUtil.getNameWithoutExtension(moduleFile), moduleFile.getParent());
 
-		final Document document = JDOMUtil.loadDocument(modulesFile);
-
-		PathMacroManager.getInstance(project).expandPaths(document.getRootElement());
-
-		XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*");
-
-		final List list = xpathExpression.selectNodes(document);
-		List<Module> modules = new ArrayList<Module>(list.size());
-		for(Object o : list)
-		{
-			Element element = (Element) o;
-
-			String filepath = element.getAttributeValue("filepath");
-			if(filepath == null)
-			{
-				continue;
-			}
-
-			final Module module = loadModule(filepath, modifiableModuleModel, project);
-			if(module == null)
-			{
-				continue;
-			}
 			modules.add(module);
-		}
 
-		return modules;
-	}
+			val modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
-	private static Module loadModule(String moduleFilePath, ModifiableModuleModel originalModel, Project project) throws JDOMException, IOException
-	{
-		final boolean fromProjectStructure = originalModel != null;
-
-		File file = new File(moduleFilePath);
-		if(!file.exists())
-		{
-			return null;
-		}
-
-		final Document document = JDOMUtil.loadDocument(file);
-
-		final ModifiableModuleModel newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
-
-
-		final Module module = newModel.newModule(FileUtil.getNameWithoutExtension(file), file.getParent());
-
-		final Element rootElement = document.getRootElement();
-
-		PathMacroManager.getInstance(module).expandPaths(document.getRootElement());
-
-		String moduleType = rootElement.getAttributeValue("type");
-
-		final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-
-		for(IdeaModuleTypeToModuleExtensionConverterEP ep : IdeaModuleTypeToModuleExtensionConverterEP.EP_NAME.getExtensions())
-		{
-			if(ep.getKey().equals(moduleType))
+			for(val ep : IdeaModuleTypeToModuleExtensionConverterEP.EP_NAME.getExtensions())
 			{
-				ep.getInstance().convertTypeToExtension(modifiableModel);
-				break;
-			}
-		}
-
-		XPath xpathExpression = XPath.newInstance("/module[@version='4']/component[@name='NewModuleRootManager']/*");
-		final List list = xpathExpression.selectNodes(document);
-		for(Object o : list)
-		{
-			Element element = (Element) o;
-			final String name = element.getName();
-			if("content".equals(name))
-			{
-				final String url = element.getAttributeValue("url");
-
-				final ContentEntry contentEntry = modifiableModel.addContentEntry(url);
-				for(Element childOfContent : element.getChildren())
+				if(ep.getKey().equals(ideaModuleModel.getModuleType()))
 				{
-					final String nameChildOfContent = childOfContent.getName();
-					if("sourceFolder".equals(nameChildOfContent))
+					ep.getInstance().convertTypeToExtension(modifiableModel);
+					break;
+				}
+			}
+
+			for(val moduleExtension : modifiableModel.getExtensions())
+			{
+				if(moduleExtension instanceof ModuleExtensionWithSdk)
+				{
+					if(((ModuleExtensionWithSdk) moduleExtension).getInheritableSdk().isNull())
 					{
-						String url2 = childOfContent.getAttributeValue("url");
-						boolean isTestSource = Boolean.valueOf(childOfContent.getAttributeValue("isTestSource"));
-						contentEntry.addFolder(url2, isTestSource ? TestContentFolderTypeProvider.getInstance() :
-								ProductionContentFolderTypeProvider.getInstance());
+						continue;
 					}
+					modifiableModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk<?>) moduleExtension);
 				}
 			}
-			else if("orderEntry".equals(name))
+
+			new WriteAction<Object>()
 			{
-				String type = element.getAttributeValue("type");
-				if("module".equals(type))
+				@Override
+				protected void run(Result<Object> result) throws Throwable
 				{
-					String moduleName = element.getAttributeValue("module-name");
-
-					modifiableModel.addInvalidModuleEntry(moduleName);
+					modifiableModel.commit();
 				}
-				else if("module-library".equals(type))
-				{
-					final Element libraryElement = element.getChild("library");
-
-					final LibraryTable moduleLibraryTable = modifiableModel.getModuleLibraryTable();
-
-					final Library library = moduleLibraryTable.createLibrary(libraryElement.getAttributeValue("name"));
-					for(Element libraryEntry : libraryElement.getChildren())
-					{
-						final String libraryEntryName = libraryEntry.getName();
-						if("CLASSES".equals(libraryEntryName))
-						{
-							parse(library, libraryEntry, OrderRootType.CLASSES);
-						}
-						else if("JAVADOC".equals(libraryEntryName))
-						{
-							parse(library, libraryEntry, OrderRootType.DOCUMENTATION);
-						}
-						else if("SOURCES".equals(libraryEntryName))
-						{
-							parse(library, libraryEntry, OrderRootType.SOURCES);
-						}
-					}
-				}
-			}
-		}
-		//TODO [VISTALL] facets converting
-
-		for(ModuleExtension<?> moduleExtension : modifiableModel.getExtensions())
-		{
-			if(moduleExtension instanceof ModuleExtensionWithSdk)
-			{
-				if(((ModuleExtensionWithSdk) moduleExtension).getInheritableSdk().isNull())
-				{
-					continue;
-				}
-				modifiableModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk<?>) moduleExtension);
-			}
+			}.execute();
 		}
 
 		new WriteAction<Object>()
@@ -273,31 +148,12 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 			@Override
 			protected void run(Result<Object> result) throws Throwable
 			{
-				modifiableModel.commit();
 				if(!fromProjectStructure)
 				{
 					newModel.commit();
 				}
 			}
 		}.execute();
-
-
-		return module;
-	}
-
-	private static void parse(Library library, Element element, OrderRootType orderRootType)
-	{
-		final Library.ModifiableModel modifiableModel = library.getModifiableModel();
-
-		for(Element child : element.getChildren())
-		{
-			final String name = child.getName();
-			if("root".equals(name))
-			{
-				final String url = child.getAttributeValue("url");
-				modifiableModel.addRoot(url, orderRootType);
-			}
-		}
-		modifiableModel.commit();
+		return modules;
 	}
 }

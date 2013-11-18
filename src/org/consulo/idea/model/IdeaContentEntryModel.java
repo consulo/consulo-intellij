@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,28 @@ import com.intellij.util.containers.MultiMap;
  * @author VISTALL
  * @since 10:08/16.06.13
  */
-public class IdeaContentEntryModel {
-  private final String myUrl;
-  private MultiMap<ContentFolderTypeProvider, String> myContentFolderTypes = new MultiMap<ContentFolderTypeProvider, String>();
+public class IdeaContentEntryModel
+{
+	private final String myUrl;
+	private MultiMap<ContentFolderTypeProvider, String> myContentFolderTypes = new MultiMap<ContentFolderTypeProvider, String>();
 
-  public IdeaContentEntryModel(String url) {
-    myUrl = url;
-  }
+	public IdeaContentEntryModel(String url)
+	{
+		myUrl = url;
+	}
 
-  public String getUrl() {
-    return myUrl;
-  }
+	public String getUrl()
+	{
+		return myUrl;
+	}
 
-  public MultiMap<ContentFolderTypeProvider, String> getContentFolderTypes() {
-    return myContentFolderTypes;
-  }
+	public MultiMap<ContentFolderTypeProvider, String> getContentFolderTypes()
+	{
+		return myContentFolderTypes;
+	}
 
-  public void addFolder(String url2, ContentFolderTypeProvider contentFolderType) {
-    myContentFolderTypes.putValue(contentFolderType, url2);
-  }
+	public void addFolder(String url2, ContentFolderTypeProvider contentFolderType)
+	{
+		myContentFolderTypes.putValue(contentFolderType, url2);
+	}
 }

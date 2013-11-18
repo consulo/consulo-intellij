@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,59 +15,67 @@
  */
 package org.consulo.idea.file;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
+import javax.swing.Icon;
+
 import org.consulo.idea.IdeaIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL
  * @since 20:26/14.06.13
  */
-public class IdeaModuleFileType implements FileType {
-  public static final String DEFAULT_EXTENSION = "iml";
-  public static final IdeaModuleFileType INSTANCE = new IdeaModuleFileType();
+public class IdeaModuleFileType implements FileType
+{
+	public static final String DEFAULT_EXTENSION = "iml";
+	public static final IdeaModuleFileType INSTANCE = new IdeaModuleFileType();
 
-  @NotNull
-  @Override
-  public String getName() {
-    return "IDEA_MODULE";
-  }
+	@NotNull
+	@Override
+	public String getName()
+	{
+		return "IDEA_MODULE";
+	}
 
-  @NotNull
-  @Override
-  public String getDescription() {
-    return "IntelliJ IDEA module files";
-  }
+	@NotNull
+	@Override
+	public String getDescription()
+	{
+		return "IntelliJ IDEA module files";
+	}
 
-  @NotNull
-  @Override
-  public String getDefaultExtension() {
-    return DEFAULT_EXTENSION;
-  }
+	@NotNull
+	@Override
+	public String getDefaultExtension()
+	{
+		return DEFAULT_EXTENSION;
+	}
 
-  @Nullable
-  @Override
-  public Icon getIcon() {
-    return IdeaIcons.Idea;
-  }
+	@Nullable
+	@Override
+	public Icon getIcon()
+	{
+		return IdeaIcons.Idea;
+	}
 
-  @Override
-  public boolean isBinary() {
-    return false;
-  }
+	@Override
+	public boolean isBinary()
+	{
+		return false;
+	}
 
-  @Override
-  public boolean isReadOnly() {
-    return false;
-  }
+	@Override
+	public boolean isReadOnly()
+	{
+		return false;
+	}
 
-  @Nullable
-  @Override
-  public String getCharset(@NotNull VirtualFile file, byte[] content) {
-    return "UTF-8";
-  }
+	@Nullable
+	@Override
+	public String getCharset(@NotNull VirtualFile file, byte[] content)
+	{
+		return "UTF-8";
+	}
 }

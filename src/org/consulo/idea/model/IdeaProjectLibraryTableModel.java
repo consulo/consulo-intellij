@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,55 +15,64 @@
  */
 package org.consulo.idea.model;
 
-import com.intellij.openapi.util.io.FileUtilRt;
-import lombok.SneakyThrows;
-import org.jdom.Document;
-import org.jdom.Element;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jdom.Document;
+import org.jdom.Element;
+import com.intellij.openapi.util.io.FileUtilRt;
+import lombok.SneakyThrows;
+
 /**
  * @author VISTALL
  * @since 9:49/16.06.13
  */
-public class IdeaProjectLibraryTableModel extends IdeaLibraryTableModel implements IdeaParseableModel {
-  private final List<IdeaLibraryModel> myLibraries = new ArrayList<IdeaLibraryModel>();
+public class IdeaProjectLibraryTableModel extends IdeaLibraryTableModel implements IdeaParseableModel
+{
+	private final List<IdeaLibraryModel> myLibraries = new ArrayList<IdeaLibraryModel>();
 
-  @Override
-  @SneakyThrows
-  public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir) {
-    File file = new File(ideaProjectDir, "libraries");
-    if (!file.exists()) {
-      return;
-    }
+	@Override
+	@SneakyThrows
+	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
+	{
+		File file = new File(ideaProjectDir, "libraries");
+		if(!file.exists())
+		{
+			return;
+		}
 
-    final FilenameFilter filter = new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return FileUtilRt.getExtension(name).equalsIgnoreCase("xml");
-      }
-    };
+		final FilenameFilter filter = new FilenameFilter()
+		{
+			@Override
+			public boolean accept(File dir, String name)
+			{
+				return FileUtilRt.getExtension(name).equalsIgnoreCase("xml");
+			}
+		};
 
-    for (File child : file.listFiles(filter)) {
-      final Document document = ideaProjectModel.loadDocument(child);
+		for(File child : file.listFiles(filter))
+		{
+			final Document document = ideaProjectModel.loadDocument(child);
 
-      final Element rootElement = document.getRootElement();
-      final String attributeValue = rootElement.getAttributeValue("name");
-      if ("libraryTable".equals(attributeValue)) {
-        final Element libraryElement = rootElement.getChild("library");
-        if (libraryElement != null) {
-          IdeaLibraryModel libraryModel = new IdeaLibraryModel();
-          libraryModel.load(ideaProjectModel, rootElement);
-          myLibraries.add(libraryModel);
-        }
-      }
-    }
-  }
+			final Element rootElement = document.getRootElement();
+			final String attributeValue = rootElement.getAttributeValue("name");
+			if("libraryTable".equals(attributeValue))
+			{
+				final Element libraryElement = rootElement.getChild("library");
+				if(libraryElement != null)
+				{
+					IdeaLibraryModel libraryModel = new IdeaLibraryModel();
+					libraryModel.load(ideaProjectModel, rootElement);
+					myLibraries.add(libraryModel);
+				}
+			}
+		}
+	}
 
-  public List<IdeaLibraryModel> getLibraries() {
-    return myLibraries;
-  }
+	public List<IdeaLibraryModel> getLibraries()
+	{
+		return myLibraries;
+	}
 }

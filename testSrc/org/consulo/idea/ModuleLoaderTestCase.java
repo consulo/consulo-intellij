@@ -15,18 +15,12 @@
  */
 package org.consulo.idea;
 
-import com.intellij.openapi.components.PathMacroMap;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.util.text.StringUtil;
-import junit.framework.TestCase;
-import org.consulo.idea.model.IdeaProjectModel;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
-import java.io.IOException;
+
+import org.consulo.idea.model.IdeaProjectModel;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.roots.OrderRootType;
+import junit.framework.TestCase;
 
 /**
  * @author VISTALL
@@ -58,25 +52,6 @@ public abstract class ModuleLoaderTestCase extends TestCase {
           return OrderRootType.DOCUMENTATION;
         }
         return null;
-      }
-
-      @NotNull
-      @Override
-      public Document loadDocument(File file) throws JDOMException, IOException {
-        Document document = super.loadDocument(file);
-        PathMacroMap pathMacroMap = new PathMacroMap() {
-          @Override
-          public String substitute(String text, boolean caseSensitive) {
-            return StringUtil.replace(text, "$PROJECT_DIR$", projectDir.getAbsolutePath(), !caseSensitive);
-          }
-
-          @Override
-          public int hashCode() {
-            return 1;
-          }
-        };
-        pathMacroMap.substitute(document.getRootElement(), false);
-        return document;
       }
     };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.consulo.idea;
  * @author VISTALL
  * @since 20:35/14.06.13
  */
-public interface IdeaConstants {
-  String PROJECT_DIR = ".idea";
+public interface IdeaConstants
+{
+	String PROJECT_DIR = ".idea";
 }

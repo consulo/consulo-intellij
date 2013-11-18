@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,15 @@
  */
 package org.consulo.idea;
 
-import com.intellij.openapi.util.IconLoader;
+import javax.swing.Icon;
 
-import javax.swing.*;
+import com.intellij.openapi.util.IconLoader;
 
 /**
  * @author VISTALL
  * @since 20:27/14.06.13
  */
-public interface IdeaIcons {
-  Icon Idea = IconLoader.findIcon("/icons/idea.png");
+public interface IdeaIcons
+{
+	Icon Idea = IconLoader.findIcon("/icons/idea.png");
 }

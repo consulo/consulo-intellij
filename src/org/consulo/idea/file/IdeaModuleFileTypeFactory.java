@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  */
 package org.consulo.idea.file;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author VISTALL
  * @since 20:28/14.06.13
  */
-public class IdeaModuleFileTypeFactory extends FileTypeFactory {
-  @Override
-  public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-    consumer.consume(IdeaModuleFileType.INSTANCE);
-  }
+public class IdeaModuleFileTypeFactory extends FileTypeFactory
+{
+	@Override
+	public void createFileTypes(@NotNull FileTypeConsumer consumer)
+	{
+		consumer.consume(IdeaModuleFileType.INSTANCE);
+	}
 }

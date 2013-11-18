@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Consulo.org
+ * Copyright 2013 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import com.intellij.util.KeyedLazyInstanceEP;
  * @author VISTALL
  * @since 16:22/15.06.13
  */
-public class IdeaModuleTypeToModuleExtensionConverterEP extends KeyedLazyInstanceEP<IdeaModuleTypeToModuleExtensionConverter> {
-  public static final ExtensionPointName<IdeaModuleTypeToModuleExtensionConverterEP> EP_NAME = ExtensionPointName.create("org.consulo.intellij.moduleTypeToModuleExtensionConverter");
+public class IdeaModuleTypeToModuleExtensionConverterEP extends KeyedLazyInstanceEP<IdeaModuleTypeToModuleExtensionConverter>
+{
+	public static final ExtensionPointName<IdeaModuleTypeToModuleExtensionConverterEP> EP_NAME = ExtensionPointName.create("org.consulo.intellij" +
+			".moduleTypeToModuleExtensionConverter");
 }

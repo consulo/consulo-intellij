@@ -15,23 +15,23 @@
         <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
         <orderEntry type="sourceFolder" forTests="false" />
         <orderEntry type="module-library">
-          <library name="consulo:Java">
+          <library name="consulo:Plugin DevKit">
             <CLASSES>
-              <root url="jar://$MODULE_DIR$/dep/java/lib/java-manifest.jar!/" />
-              <root url="jar://$MODULE_DIR$/dep/java/lib/java-rt.jar!/" />
-              <root url="jar://$MODULE_DIR$/dep/java/lib/java.jar!/" />
-              <root url="jar://$MODULE_DIR$/dep/java/lib/jdk-annotations.jar!/" />
+              <root url="jar://$MODULE_DIR$/dep/devkit/lib/devkit-lombok.jar!/" />
+              <root url="jar://$MODULE_DIR$/dep/devkit/lib/devkit.jar!/" />
+              <root url="jar://$MODULE_DIR$/dep/devkit/lib/dtdparser113.jar!/" />
             </CLASSES>
             <DOCUMENTATION />
             <SOURCES />
           </library>
         </orderEntry>
         <orderEntry type="module-library">
-          <library name="consulo:Plugin DevKit">
+          <library name="consulo:Java">
             <CLASSES>
-              <root url="jar://$MODULE_DIR$/dep/devkit/lib/devkit-lombok.jar!/" />
-              <root url="jar://$MODULE_DIR$/dep/devkit/lib/devkit.jar!/" />
-              <root url="jar://$MODULE_DIR$/dep/devkit/lib/dtdparser113.jar!/" />
+              <root url="jar://$MODULE_DIR$/dep/java/lib/java-manifest.jar!/" />
+              <root url="jar://$MODULE_DIR$/dep/java/lib/java-rt.jar!/" />
+              <root url="jar://$MODULE_DIR$/dep/java/lib/java.jar!/" />
+              <root url="jar://$MODULE_DIR$/dep/java/lib/jdk-annotations.jar!/" />
             </CLASSES>
             <DOCUMENTATION />
             <SOURCES />
