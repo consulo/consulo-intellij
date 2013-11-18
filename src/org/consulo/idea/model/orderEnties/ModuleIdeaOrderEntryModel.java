@@ -17,19 +17,19 @@ package org.consulo.idea.model.orderEnties;
 
 /**
  * @author VISTALL
- * @since 10:20/16.06.13
+ * @since 10:14/16.06.13
  */
-public class JdkSourceOrderEntryModel extends OrderEntryModel
+public class ModuleIdeaOrderEntryModel extends IdeaOrderEntryModel
 {
-	private final String myJdkName;
+	private final String myModuleName;
 
-	public JdkSourceOrderEntryModel(String jdkName)
+	public ModuleIdeaOrderEntryModel(String moduleName)
 	{
-		myJdkName = jdkName;
+		myModuleName = moduleName;
 	}
 
-	public String getJdkName()
+	public String getModuleName()
 	{
-		return myJdkName;
+		return myModuleName;
 	}
 }

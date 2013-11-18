@@ -19,6 +19,17 @@ package org.consulo.idea.model.orderEnties;
  * @author VISTALL
  * @since 10:12/16.06.13
  */
-public abstract class OrderEntryModel
+public abstract class IdeaOrderEntryModel
 {
+	private boolean myExported;
+
+	public boolean isExported()
+	{
+		return myExported;
+	}
+
+	public void setExported(boolean exported)
+	{
+		myExported = exported;
+	}
 }

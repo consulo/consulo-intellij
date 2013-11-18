@@ -15,23 +15,21 @@
  */
 package org.consulo.idea.model.orderEnties;
 
-import org.consulo.idea.model.IdeaLibraryModel;
-
 /**
  * @author VISTALL
- * @since 10:17/16.06.13
+ * @since 10:18/16.06.13
  */
-public class ModuleLibraryOrderEntryModel extends OrderEntryModel
+public class ProjectLibraryIdeaOrderEntryModel extends IdeaOrderEntryModel
 {
-	private final IdeaLibraryModel myLibraryModel;
+	private final String myLibraryName;
 
-	public ModuleLibraryOrderEntryModel(IdeaLibraryModel libraryModel)
+	public ProjectLibraryIdeaOrderEntryModel(String libraryName)
 	{
-		myLibraryModel = libraryModel;
+		myLibraryName = libraryName;
 	}
 
-	public IdeaLibraryModel getLibraryModel()
+	public String getLibraryName()
 	{
-		return myLibraryModel;
+		return myLibraryName;
 	}
 }

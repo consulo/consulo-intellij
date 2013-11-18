@@ -16,6 +16,7 @@
 package org.consulo.idea.model;
 
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;
 
 /**
@@ -25,7 +26,7 @@ import com.intellij.util.containers.MultiMap;
 public class IdeaContentEntryModel
 {
 	private final String myUrl;
-	private MultiMap<ContentFolderTypeProvider, String> myContentFolderTypes = new MultiMap<ContentFolderTypeProvider, String>();
+	private MultiMap<ContentFolderTypeProvider, String> myContentFolderTypes = new LinkedMultiMap<ContentFolderTypeProvider, String>();
 
 	public IdeaContentEntryModel(String url)
 	{

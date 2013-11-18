@@ -23,8 +23,13 @@ import javax.swing.Icon;
 
 import org.consulo.idea.IdeaConstants;
 import org.consulo.idea.IdeaIcons;
+import org.consulo.idea.model.IdeaLibraryModel;
 import org.consulo.idea.model.IdeaModuleTableModel;
+import org.consulo.idea.model.IdeaProjectLibraryTableModel;
 import org.consulo.idea.model.IdeaProjectModel;
+import org.consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
+import org.consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
+import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +41,11 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ExportableOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
+import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
@@ -112,6 +121,49 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 
 			val modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
+			for(val ideaContentEntryModel : ideaModuleModel.getContentEntries())
+			{
+				val contentEntry = modifiableModel.addContentEntry(ideaContentEntryModel.getUrl());
+
+				for(val entry : ideaContentEntryModel.getContentFolderTypes().entrySet())
+				{
+					for(val url : entry.getValue())
+					{
+						contentEntry.addFolder(url, entry.getKey());
+					}
+				}
+			}
+
+			for(val orderEntryModel : ideaModuleModel.getOrderEntries())
+			{
+				OrderEntry orderEntry = null;
+				if(orderEntryModel instanceof ModuleIdeaOrderEntryModel)
+				{
+					orderEntry = modifiableModel.addInvalidModuleEntry(((ModuleIdeaOrderEntryModel) orderEntryModel).getModuleName());
+				}
+				else if(orderEntryModel instanceof ProjectLibraryIdeaOrderEntryModel)
+				{
+					orderEntry = modifiableModel.addInvalidLibrary(((ProjectLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryName(),
+							"project");
+				}
+				else if(orderEntryModel instanceof ModuleLibraryIdeaOrderEntryModel)
+				{
+					val libraryModel = ((ModuleLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryModel();
+
+					val library = modifiableModel.getModuleLibraryTable().createLibrary(libraryModel.getName());
+
+					convertLibrary(library, libraryModel);
+
+					orderEntry = modifiableModel.findLibraryOrderEntry(library);
+				}
+
+				//noinspection ConstantConditions
+				if(orderEntry instanceof ExportableOrderEntry)
+				{
+					((ExportableOrderEntry) orderEntry).setExported(orderEntryModel.isExported());
+				}
+			}
+
 			for(val ep : IdeaModuleTypeToModuleExtensionConverterEP.EP_NAME.getExtensions())
 			{
 				if(ep.getKey().equals(ideaModuleModel.getModuleType()))
@@ -143,11 +195,23 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 			}.execute();
 		}
 
+		val libraryTable = ProjectLibraryTable.getInstance(project);
+
+		val libraryTableModifiableModel = libraryTable.getModifiableModel();
+
+		for(val ideaLibraryModel : ideaProjectModel.getInstance(IdeaProjectLibraryTableModel.class).getLibraries())
+		{
+			val library = libraryTableModifiableModel.createLibrary(ideaLibraryModel.getName());
+
+			convertLibrary(library, ideaLibraryModel);
+		}
+
 		new WriteAction<Object>()
 		{
 			@Override
 			protected void run(Result<Object> result) throws Throwable
 			{
+				libraryTableModifiableModel.commit();
 				if(!fromProjectStructure)
 				{
 					newModel.commit();
@@ -155,5 +219,26 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 			}
 		}.execute();
 		return modules;
+	}
+
+	private static void convertLibrary(Library library, IdeaLibraryModel ideaLibraryModel)
+	{
+		val modifiableModel = library.getModifiableModel();
+		for(val entry : ideaLibraryModel.getOrderRoots().entrySet())
+		{
+			for(val url : entry.getValue())
+			{
+				modifiableModel.addRoot(url, entry.getKey());
+			}
+		}
+
+		new WriteAction<Object>()
+		{
+			@Override
+			protected void run(Result<Object> result) throws Throwable
+			{
+				modifiableModel.commit();
+			}
+		}.execute();
 	}
 }

@@ -17,19 +17,10 @@ package org.consulo.idea.model.orderEnties;
 
 /**
  * @author VISTALL
- * @since 10:18/16.06.13
+ * @since 10:13/16.06.13
+ *        <p/>
+ *        sourceFolder
  */
-public class ProjectLibraryOrderEntryModel extends OrderEntryModel
+public class ModuleSourceIdeaOrderEntryModel extends IdeaOrderEntryModel
 {
-	private final String myLibraryName;
-
-	public ProjectLibraryOrderEntryModel(String libraryName)
-	{
-		myLibraryName = libraryName;
-	}
-
-	public String getLibraryName()
-	{
-		return myLibraryName;
-	}
 }

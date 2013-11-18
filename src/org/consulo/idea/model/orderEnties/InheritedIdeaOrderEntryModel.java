@@ -19,6 +19,6 @@ package org.consulo.idea.model.orderEnties;
  * @author VISTALL
  * @since 10:15/16.06.13
  */
-public class InheritedOrderEntryModel extends OrderEntryModel
+public class InheritedIdeaOrderEntryModel extends IdeaOrderEntryModel
 {
 }

@@ -17,6 +17,7 @@ package org.consulo.idea.model;
 
 import org.jdom.Element;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;
 
 /**
@@ -25,7 +26,7 @@ import com.intellij.util.containers.MultiMap;
  */
 public class IdeaLibraryModel
 {
-	private final MultiMap<OrderRootType, String> myOrderRoots = new MultiMap<OrderRootType, String>();
+	private final MultiMap<OrderRootType, String> myOrderRoots = new LinkedMultiMap<OrderRootType, String>();
 	private String myName;
 
 	public IdeaLibraryModel()

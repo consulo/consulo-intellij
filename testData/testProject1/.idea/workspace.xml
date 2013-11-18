@@ -6,6 +6,26 @@
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/../../../../.gitignore" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1371563814360" ignored="false" />
     <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1371564143535" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/workspace.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/compiler.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/modules.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/encodings.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/vcs.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/scopes/scope_settings.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/copyright/profiles_settings.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/libraries/concierge_1_0_0.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/.consulo/misc.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778209242" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/inspectionProfiles/Project_Default.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337063" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/encodings.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337063" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/vcs.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337063" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/scopes/scope_settings.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337063" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/copyright/profiles_settings.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337063" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/misc.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778338264" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/workspace.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778338264" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/compiler.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337063" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/uiDesigner.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337063" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/modules.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337064" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../consulo/.consulo/inspectionProfiles/profiles_settings.xml" changelist="f7164f2e-322a-4c74-80c8-785c5e45be20" time="1384778337064" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,8 +153,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -143,7 +163,7 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/concierge-1.0.0.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -252,11 +272,13 @@
       <updated>1371563731302</updated>
       <workItem from="1371563733247" duration="263000" />
       <workItem from="1371564129653" duration="17000" />
+      <workItem from="1384777944244" duration="398000" />
+      <workItem from="1384778491758" duration="9000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="280000" />
+    <option name="totallyTimeSpent" value="687000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1770" height="1096" extended-state="6" />
@@ -347,23 +369,17 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/testProject1Inner1/src/inner/Test2/Test.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="115" selection-start="687" selection-end="687" vertical-scroll-proportion="0.18018018">
-          <folding />
-        </state>
+        <state line="24" column="115" selection-start="687" selection-end="687" vertical-scroll-proportion="0.18018018" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/testSrc/test/TestClass.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="22" selection-start="680" selection-end="680" vertical-scroll-proportion="0.12612613">
-          <folding />
-        </state>
+        <state line="21" column="22" selection-start="680" selection-end="680" vertical-scroll-proportion="0.12612613" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/SourceClass.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="24" selection-start="682" selection-end="682" vertical-scroll-proportion="0.12612613">
-          <folding />
-        </state>
+        <state line="21" column="24" selection-start="682" selection-end="682" vertical-scroll-proportion="0.12612613" />
       </provider>
     </entry>
   </component>

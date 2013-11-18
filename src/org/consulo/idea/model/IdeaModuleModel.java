@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.consulo.idea.model.orderEnties.InheritedOrderEntryModel;
-import org.consulo.idea.model.orderEnties.JdkSourceOrderEntryModel;
-import org.consulo.idea.model.orderEnties.ModuleLibraryOrderEntryModel;
-import org.consulo.idea.model.orderEnties.ModuleOrderEntryModel;
-import org.consulo.idea.model.orderEnties.ModuleSourceOrderEntryModel;
-import org.consulo.idea.model.orderEnties.OrderEntryModel;
-import org.consulo.idea.model.orderEnties.ProjectLibraryOrderEntryModel;
+import org.consulo.idea.model.orderEnties.IdeaOrderEntryModel;
+import org.consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
+import org.consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
+import org.consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
+import org.consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
+import org.consulo.idea.model.orderEnties.ModuleSourceIdeaOrderEntryModel;
+import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
@@ -43,7 +43,7 @@ import lombok.val;
 public class IdeaModuleModel implements IdeaParseableModel
 {
 	private final List<IdeaContentEntryModel> myContentEntries = new ArrayList<IdeaContentEntryModel>();
-	private final List<OrderEntryModel> myOrderEntries = new ArrayList<OrderEntryModel>();
+	private final List<IdeaOrderEntryModel> myOrderEntries = new ArrayList<IdeaOrderEntryModel>();
 	private final Map<String, String> myComponentAttributes = new HashMap<String, String>();
 	private final String myFilePath;
 	private String myModuleType;
@@ -58,7 +58,7 @@ public class IdeaModuleModel implements IdeaParseableModel
 		return myContentEntries;
 	}
 
-	public List<OrderEntryModel> getOrderEntries()
+	public List<IdeaOrderEntryModel> getOrderEntries()
 	{
 		return myOrderEntries;
 	}
@@ -110,39 +110,47 @@ public class IdeaModuleModel implements IdeaParseableModel
 			}
 			else if("orderEntry".equals(name))
 			{
+				IdeaOrderEntryModel orderEntryModel = null;
 				String type = element.getAttributeValue("type");
 				if("module".equals(type))
 				{
 					String moduleName = element.getAttributeValue("module-name");
 
-					myOrderEntries.add(new ModuleOrderEntryModel(moduleName));
+					orderEntryModel = new ModuleIdeaOrderEntryModel(moduleName);
 				}
 				else if("sourceFolder".equals(type))
 				{
-					myOrderEntries.add(new ModuleSourceOrderEntryModel());
+					orderEntryModel = new ModuleSourceIdeaOrderEntryModel();
 				}
 				else if("inheritedJdk".equals(type))
 				{
-					myOrderEntries.add(new InheritedOrderEntryModel());
+					orderEntryModel = new InheritedIdeaOrderEntryModel();
 				}
 				else if("module-library".equals(type))
 				{
 					IdeaLibraryModel libraryModel = new IdeaLibraryModel();
 					libraryModel.load(ideaProjectModel, element);
 
-					myOrderEntries.add(new ModuleLibraryOrderEntryModel(libraryModel));
+					orderEntryModel = new ModuleLibraryIdeaOrderEntryModel(libraryModel);
 				}
 				else if("jdk".equals(type))
 				{
-					myOrderEntries.add(new JdkSourceOrderEntryModel(element.getAttributeValue("jdkName")));
+					orderEntryModel = new JdkSourceIdeaOrderEntryModel(element.getAttributeValue("jdkName"));
 				}
 				else if("library".equals(type))
 				{
 					final String level = element.getAttributeValue("level");
 					if("project".equals(level))
 					{
-						myOrderEntries.add(new ProjectLibraryOrderEntryModel(name));
+						orderEntryModel = new ProjectLibraryIdeaOrderEntryModel(element.getAttributeValue("name"));
 					}
+				}
+
+				if(orderEntryModel != null)
+				{
+					myOrderEntries.add(orderEntryModel);
+
+					orderEntryModel.setExported(element.getAttribute("exported") != null);
 				}
 			}
 		}
