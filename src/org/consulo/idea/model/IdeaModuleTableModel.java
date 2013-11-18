@@ -58,7 +58,7 @@ public class IdeaModuleTableModel implements IdeaParseableModel
 				continue;
 			}
 
-			final IdeaModuleModel moduleModel = new IdeaModuleModel(filepath);
+			final IdeaModuleModel moduleModel = new IdeaModuleModel(filepath, element.getAttributeValue("group"));
 			moduleModel.load(ideaProjectModel, ideaProjectDir);
 			myModules.add(moduleModel);
 		}

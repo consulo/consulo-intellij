@@ -46,11 +46,13 @@ public class IdeaModuleModel implements IdeaParseableModel
 	private final List<IdeaOrderEntryModel> myOrderEntries = new ArrayList<IdeaOrderEntryModel>();
 	private final Map<String, String> myComponentAttributes = new HashMap<String, String>();
 	private final String myFilePath;
+	private final String myGroup;
 	private String myModuleType;
 
-	public IdeaModuleModel(String filepath)
+	public IdeaModuleModel(String filepath, String group)
 	{
 		myFilePath = filepath;
+		myGroup = group;
 	}
 
 	public List<IdeaContentEntryModel> getContentEntries()
@@ -164,5 +166,10 @@ public class IdeaModuleModel implements IdeaParseableModel
 	public String getFilePath()
 	{
 		return myFilePath;
+	}
+
+	public String getGroup()
+	{
+		return myGroup;
 	}
 }

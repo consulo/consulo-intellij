@@ -121,6 +121,12 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 
 			val modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
+			val group = ideaModuleModel.getGroup();
+			if(group != null)
+			{
+				newModel.setModuleGroupPath(module, group.split("/"));
+			}
+
 			for(val ideaContentEntryModel : ideaModuleModel.getContentEntries())
 			{
 				val contentEntry = modifiableModel.addContentEntry(ideaContentEntryModel.getUrl());
