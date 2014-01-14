@@ -37,9 +37,7 @@ public abstract class IdeaModuleTypeToModuleExtensionConverter
 			return;
 		}
 
-		final MutableModuleExtension extension = (MutableModuleExtension) rootModel.getExtensionWithoutCheck(provider.getImmutableClass());
-
-		assert extension != null;
+		final MutableModuleExtension extension = rootModel.getExtensionWithoutCheck(id);
 
 		extension.setEnabled(true);
 	}
