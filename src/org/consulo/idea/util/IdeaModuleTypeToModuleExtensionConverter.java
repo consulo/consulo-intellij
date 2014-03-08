@@ -15,7 +15,6 @@
  */
 package org.consulo.idea.util;
 
-import org.consulo.module.extension.ModuleExtensionProvider;
 import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +30,7 @@ public abstract class IdeaModuleTypeToModuleExtensionConverter
 
 	protected static void enableExtensionById(@NotNull String id, @NotNull ModuleRootModel rootModel)
 	{
-		final ModuleExtensionProvider provider = ModuleExtensionProviderEP.findProvider(id);
+		final ModuleExtensionProviderEP provider = ModuleExtensionProviderEP.findProviderEP(id);
 		if(provider == null)
 		{
 			return;
