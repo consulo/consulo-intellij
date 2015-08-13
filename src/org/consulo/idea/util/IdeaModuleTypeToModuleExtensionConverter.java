@@ -15,9 +15,9 @@
  */
 package org.consulo.idea.util;
 
-import org.consulo.module.extension.ModuleExtensionProviderEP;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
 import com.intellij.openapi.roots.ModuleRootModel;
 
 /**
