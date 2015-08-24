@@ -23,11 +23,14 @@ import javax.swing.Icon;
 
 import org.consulo.idea.IdeaConstants;
 import org.consulo.idea.IdeaIcons;
+import org.consulo.idea.model.IdeaContentEntryModel;
 import org.consulo.idea.model.IdeaContentFolderModel;
 import org.consulo.idea.model.IdeaLibraryModel;
+import org.consulo.idea.model.IdeaModuleModel;
 import org.consulo.idea.model.IdeaModuleTableModel;
 import org.consulo.idea.model.IdeaProjectLibraryTableModel;
 import org.consulo.idea.model.IdeaProjectModel;
+import org.consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
@@ -36,6 +39,7 @@ import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.roots.ContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
@@ -51,6 +55,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ExportableOrderEntry;
+import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
@@ -105,7 +110,10 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 
 	@Nullable
 	@Override
-	public List<Module> commit(Project project, ModifiableModuleModel originalModel, ModulesProvider modulesProvider,
+	@RequiredReadAction
+	public List<Module> commit(Project project,
+			ModifiableModuleModel originalModel,
+			ModulesProvider modulesProvider,
 			ModifiableArtifactModel artifactModel)
 	{
 		val projectPath = project.getBasePath();
@@ -120,24 +128,33 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 		val fromProjectStructure = originalModel != null;
 		val newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
 
-		val modules = new ArrayList<Module>();
-		for(val ideaModuleModel : ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules())
+		List<Module> modules = new ArrayList<Module>();
+		for(IdeaModuleModel ideaModuleModel : ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules())
 		{
-			val moduleFile = ideaModuleModel.getFile();
+			File moduleFile = ideaModuleModel.getFile();
 
-			val module = newModel.newModule(FileUtil.getNameWithoutExtension(moduleFile), moduleFile.getParent());
+			String nameWithoutExtension = FileUtil.getNameWithoutExtension(moduleFile);
+
+			List<IdeaContentEntryModel> contentEntries = ideaModuleModel.getContentEntries();
+			String moduleUrl = null;
+			if(!contentEntries.isEmpty())
+			{
+				moduleUrl = contentEntries.get(0).getUrl();
+			}
+
+			Module module = newModel.newModule(nameWithoutExtension, moduleUrl);
 
 			modules.add(module);
 
-			val modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+			final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
-			val group = ideaModuleModel.getGroup();
+			String group = ideaModuleModel.getGroup();
 			if(group != null)
 			{
 				newModel.setModuleGroupPath(module, group.split("/"));
 			}
 
-			for(val ideaContentEntryModel : ideaModuleModel.getContentEntries())
+			for(IdeaContentEntryModel ideaContentEntryModel : contentEntries)
 			{
 				val contentEntry = modifiableModel.addContentEntry(ideaContentEntryModel.getUrl());
 
@@ -163,28 +180,24 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 
 					if(entry.getBoolProperty("generated"))
 					{
-						contentFolder.setPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED, Boolean.TRUE);
+						contentFolder.setPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED,
+								Boolean.TRUE);
 					}
 				}
 			}
 
-			for(val orderEntryModel : ideaModuleModel.getOrderEntries())
+			for(IdeaOrderEntryModel orderEntryModel : ideaModuleModel.getOrderEntries())
 			{
 				OrderEntry orderEntry = null;
 				if(orderEntryModel instanceof ModuleIdeaOrderEntryModel)
 				{
-					String moduleName = ((ModuleIdeaOrderEntryModel) orderEntryModel).getModuleName();
-					if(moduleName.equals(module.getName()))
-					{
-						LOGGER.error("Cant add self to module dependencies: " + moduleName + ": " + moduleFile.getAbsolutePath());
-						continue;
-					}
-					orderEntry = modifiableModel.addInvalidModuleEntry(moduleName);
+					orderEntry = modifiableModel.addInvalidModuleEntry(((ModuleIdeaOrderEntryModel) orderEntryModel)
+							.getModuleName());
 				}
 				else if(orderEntryModel instanceof ProjectLibraryIdeaOrderEntryModel)
 				{
-					orderEntry = modifiableModel.addInvalidLibrary(((ProjectLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryName(),
-							"project");
+					orderEntry = modifiableModel.addInvalidLibrary(((ProjectLibraryIdeaOrderEntryModel)
+							orderEntryModel).getLibraryName(), "project");
 				}
 				else if(orderEntryModel instanceof ModuleLibraryIdeaOrderEntryModel)
 				{
