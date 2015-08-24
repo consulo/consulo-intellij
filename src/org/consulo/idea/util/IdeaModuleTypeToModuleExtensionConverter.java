@@ -15,29 +15,45 @@
  */
 package org.consulo.idea.util;
 
+import org.consulo.idea.model.IdeaModuleModel;
+import org.consulo.idea.model.IdeaProjectModel;
 import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootModel;
 
 /**
  * @author VISTALL
  * @since 16:25/15.06.13
  */
-public abstract class IdeaModuleTypeToModuleExtensionConverter
+public abstract class IdeaModuleTypeToModuleExtensionConverter<T extends IdeaModuleTypeConfigurationPanel>
 {
-	public abstract void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel);
+	@Nullable
+	public T createConfigurationPanel(@NotNull Project project, @NotNull IdeaProjectModel ideaProjectModel,
+			@NotNull IdeaModuleModel ideaModuleModel)
+	{
+		return null;
+	}
 
-	protected static void enableExtensionById(@NotNull String id, @NotNull ModuleRootModel rootModel)
+	public abstract void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel,
+			@NotNull IdeaModuleModel ideaModuleModel,
+			@Nullable T panel);
+
+	@SuppressWarnings("unchecked")
+	protected static <K extends MutableModuleExtension<?>> K enableExtensionById(@NotNull String id,
+			@NotNull ModuleRootModel rootModel)
 	{
 		final ModuleExtensionProviderEP provider = ModuleExtensionProviderEP.findProviderEP(id);
 		if(provider == null)
 		{
-			return;
+			return null;
 		}
 
 		final MutableModuleExtension extension = rootModel.getExtensionWithoutCheck(id);
-
+		assert extension != null;
 		extension.setEnabled(true);
+		return (K) extension;
 	}
 }

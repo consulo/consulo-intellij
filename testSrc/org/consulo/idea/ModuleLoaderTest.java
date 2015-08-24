@@ -57,9 +57,9 @@ public class ModuleLoaderTest extends ModuleLoaderTestCase
 		final IdeaModuleModel firstModule = moduleTableModel.getModules().get(0);
 		assertEquals(firstModule.getModuleType(), "JAVA_MODULE");
 		assertEquals(firstModule.getContentEntries().size(), 1);
-		assertEquals(firstModule.getComponentAttributes().size(), 2);
-		assertEquals(firstModule.getComponentAttributes().get("name"), "NewModuleRootManager");
-		assertEquals(firstModule.getComponentAttributes().get("inherit-compiler-output"), "true");
+		assertEquals(firstModule.getProperties().size(), 2);
+		assertEquals(firstModule.getProperty("name"), "NewModuleRootManager");
+		assertEquals(firstModule.getProperty("inherit-compiler-output"), "true");
 
 		IdeaContentEntryModel contentEntryModel = firstModule.getContentEntries().get(0);
 
@@ -80,10 +80,10 @@ public class ModuleLoaderTest extends ModuleLoaderTestCase
 		final IdeaModuleModel secondModule = moduleTableModel.getModules().get(1);
 		assertEquals(secondModule.getModuleType(), "JAVA_MODULE");
 		assertEquals(secondModule.getContentEntries().size(), 1);
-		assertEquals(secondModule.getComponentAttributes().size(), 3);
-		assertEquals(secondModule.getComponentAttributes().get("name"), "NewModuleRootManager");
-		assertEquals(secondModule.getComponentAttributes().get("inherit-compiler-output"), "true");
-		assertEquals(secondModule.getComponentAttributes().get("LANGUAGE_LEVEL"), "JDK_1_7");
+		assertEquals(secondModule.getProperties().size(), 3);
+		assertEquals(secondModule.getProperty("name"), "NewModuleRootManager");
+		assertEquals(secondModule.getProperty("inherit-compiler-output"), "true");
+		assertEquals(secondModule.getProperty("LANGUAGE_LEVEL"), "JDK_1_7");
 
 		contentEntryModel = secondModule.getContentEntries().get(0);
 

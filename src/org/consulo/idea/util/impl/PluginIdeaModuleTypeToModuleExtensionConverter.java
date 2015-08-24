@@ -15,8 +15,11 @@
  */
 package org.consulo.idea.util.impl;
 
+import org.consulo.idea.model.IdeaModuleModel;
+import org.consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.roots.ModuleRootModel;
 
 /**
@@ -26,7 +29,9 @@ import com.intellij.openapi.roots.ModuleRootModel;
 public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTypeToModuleExtensionConverter
 {
 	@Override
-	public void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel)
+	public void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel,
+			@NotNull IdeaModuleModel ideaModuleModel,
+			@Nullable IdeaModuleTypeConfigurationPanel panel)
 	{
 		enableExtensionById("java", moduleRootModel);
 		enableExtensionById("consulo-plugin", moduleRootModel);

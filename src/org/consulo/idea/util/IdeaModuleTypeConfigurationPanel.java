@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.consulo.idea.util.projectWizard;
+
+package org.consulo.idea.util;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.WizardContext;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * @author VISTALL
- * @since 10:29/16.06.13
- */
-public class ChooseMainModuleStep extends ModuleWizardStep
+* @author VISTALL
+* @since 25.08.2015
+*/
+public interface IdeaModuleTypeConfigurationPanel
 {
-	private final WizardContext myContext;
-
-	public ChooseMainModuleStep(WizardContext context)
-	{
-
-		myContext = context;
-	}
-
-	@Override
-	public JComponent getComponent()
-	{
-		return new JLabel("test");
-	}
-
-	@Override
-	public void updateDataModel()
-	{
-	}
+	@NotNull
+	JComponent getComponent();
 }

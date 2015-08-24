@@ -15,15 +15,17 @@
  */
 package org.consulo.idea.util;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.util.KeyedLazyInstanceEP;
 
 /**
  * @author VISTALL
  * @since 16:22/15.06.13
  */
-public class IdeaModuleTypeToModuleExtensionConverterEP extends KeyedLazyInstanceEP<IdeaModuleTypeToModuleExtensionConverter>
+public class IdeaModuleTypeToModuleExtensionConverterEP extends
+		KeyedLazyInstanceEP<IdeaModuleTypeToModuleExtensionConverter>
 {
-	public static final ExtensionPointName<IdeaModuleTypeToModuleExtensionConverterEP> EP_NAME = ExtensionPointName.create("org.consulo.intellij" +
-			".moduleTypeToModuleExtensionConverter");
+	public static final KeyedExtensionCollector<IdeaModuleTypeToModuleExtensionConverter,
+			String> EP = new KeyedExtensionCollector<IdeaModuleTypeToModuleExtensionConverter,
+			String>("org.consulo.intellij.moduleTypeToModuleExtensionConverter");
 }

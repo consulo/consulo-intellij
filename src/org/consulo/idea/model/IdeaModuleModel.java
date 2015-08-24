@@ -17,9 +17,7 @@ package org.consulo.idea.model;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
@@ -39,11 +37,10 @@ import lombok.val;
  * @author VISTALL
  * @since 9:57/16.06.13
  */
-public class IdeaModuleModel implements IdeaParseableModel
+public class IdeaModuleModel extends IdeaPropertyHolderModel<IdeaModuleModel> implements IdeaParseableModel
 {
 	private final List<IdeaContentEntryModel> myContentEntries = new ArrayList<IdeaContentEntryModel>();
 	private final List<IdeaOrderEntryModel> myOrderEntries = new ArrayList<IdeaOrderEntryModel>();
-	private final Map<String, String> myComponentAttributes = new HashMap<String, String>();
 	private final File myFilePath;
 	private final String myGroup;
 	private String myModuleType;
@@ -64,11 +61,6 @@ public class IdeaModuleModel implements IdeaParseableModel
 		return myOrderEntries;
 	}
 
-	public Map<String, String> getComponentAttributes()
-	{
-		return myComponentAttributes;
-	}
-
 	@SneakyThrows
 	@Override
 	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
@@ -83,7 +75,7 @@ public class IdeaModuleModel implements IdeaParseableModel
 		final Element componentNode = (Element) xpathExpression.selectSingleNode(document);
 		for(Attribute attribute : componentNode.getAttributes())
 		{
-			myComponentAttributes.put(attribute.getName(), attribute.getValue());
+			addProperty(attribute.getName(), attribute.getValue());
 		}
 
 		for(Element element : componentNode.getChildren())

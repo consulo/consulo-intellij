@@ -16,21 +16,40 @@
 
 package org.consulo.idea.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 25.08.2015
  */
-public class IdeaContentFolderModel extends IdeaPropertyHolderModel<IdeaContentFolderModel>
+public abstract class IdeaPropertyHolderModel<T extends IdeaPropertyHolderModel<T>>
 {
-	private String myUrl;
+	private Map<String, String> myProperties = new HashMap<String, String>();
 
-	public IdeaContentFolderModel(String url)
+	@NotNull
+	@SuppressWarnings("unchecked")
+	public T addProperty(String name, String value)
 	{
-		myUrl = url;
+		myProperties.put(name, value);
+		return (T) this;
 	}
 
-	public String getUrl()
+	public Map<String, String> getProperties()
 	{
-		return myUrl;
+		return myProperties;
+	}
+
+	public boolean getBoolProperty(String name)
+	{
+		String property = getProperty(name);
+		return property != null && Boolean.parseBoolean(property);
+	}
+
+	public String getProperty(String name)
+	{
+		return myProperties.get(name);
 	}
 }

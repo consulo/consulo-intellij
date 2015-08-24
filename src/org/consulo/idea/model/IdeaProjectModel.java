@@ -38,6 +38,7 @@ public class IdeaProjectModel extends HolderModel implements IdeaParseableModel
 	{
 		myIdeaProjectDir = ideaProjectDir;
 		getInstance(IdeaProjectLibraryTableModel.class);
+		getInstance(IdeaProjectRootModel.class);
 		getInstance(IdeaModuleTableModel.class);
 
 		load(this, ideaProjectDir);

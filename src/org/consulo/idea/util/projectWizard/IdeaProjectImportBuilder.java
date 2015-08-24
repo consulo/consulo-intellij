@@ -17,7 +17,9 @@ package org.consulo.idea.util.projectWizard;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Icon;
 
@@ -34,8 +36,11 @@ import org.consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
+import org.consulo.idea.util.IdeaModuleTypeConfigurationPanel;
+import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP;
 import org.consulo.lombok.annotations.Logger;
+import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,6 +67,7 @@ import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import lombok.val;
@@ -128,21 +134,46 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 		val fromProjectStructure = originalModel != null;
 		val newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
 
+		List<IdeaModuleModel> ideaModuleModels = ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules();
+
+		Map<String, IdeaModuleTypeConfigurationPanel> map = new HashMap<String, IdeaModuleTypeConfigurationPanel>();
+
+		for(IdeaModuleModel ideaModuleModel : ideaModuleModels)
+		{
+			String moduleType = ideaModuleModel.getModuleType();
+			IdeaModuleTypeToModuleExtensionConverter instance = IdeaModuleTypeToModuleExtensionConverterEP.EP
+					.findSingle(moduleType);
+
+			IdeaModuleTypeConfigurationPanel configurationPanel = instance.createConfigurationPanel(project,
+					ideaProjectModel, ideaModuleModel);
+			if(configurationPanel != null)
+			{
+				map.put(moduleType, configurationPanel);
+			}
+		}
+
+		if(!map.isEmpty())
+		{
+			IdeaModuleConfigurationDialog dialog = new IdeaModuleConfigurationDialog(project, map);
+
+			dialog.show();
+		}
+
 		List<Module> modules = new ArrayList<Module>();
-		for(IdeaModuleModel ideaModuleModel : ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules())
+		for(IdeaModuleModel ideaModuleModel : ideaModuleModels)
 		{
 			File moduleFile = ideaModuleModel.getFile();
 
 			String nameWithoutExtension = FileUtil.getNameWithoutExtension(moduleFile);
 
 			List<IdeaContentEntryModel> contentEntries = ideaModuleModel.getContentEntries();
-			String moduleUrl = null;
+			String modulePath = null;
 			if(!contentEntries.isEmpty())
 			{
-				moduleUrl = contentEntries.get(0).getUrl();
+				modulePath = VfsUtil.urlToPath(contentEntries.get(0).getUrl());
 			}
 
-			Module module = newModel.newModule(nameWithoutExtension, moduleUrl);
+			Module module = newModel.newModule(nameWithoutExtension, modulePath);
 
 			modules.add(module);
 
@@ -217,16 +248,19 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 				}
 			}
 
-			for(val ep : IdeaModuleTypeToModuleExtensionConverterEP.EP_NAME.getExtensions())
+			String moduleType = ideaModuleModel.getModuleType();
+
+			IdeaModuleTypeConfigurationPanel ideaModuleTypeConfigurationPanel = map.get(moduleType);
+			if(ideaModuleTypeConfigurationPanel != null)
 			{
-				if(ep.getKey().equals(ideaModuleModel.getModuleType()))
-				{
-					ep.getInstance().convertTypeToExtension(modifiableModel);
-					break;
-				}
+				IdeaModuleTypeToModuleExtensionConverter converter = IdeaModuleTypeToModuleExtensionConverterEP.EP
+						.findSingle(moduleType);
+				assert converter != null;
+				//noinspection unchecked
+				converter.convertTypeToExtension(modifiableModel, ideaModuleModel, ideaModuleTypeConfigurationPanel);
 			}
 
-			for(val moduleExtension : modifiableModel.getExtensions())
+			for(ModuleExtension moduleExtension : modifiableModel.getExtensions())
 			{
 				if(moduleExtension instanceof ModuleExtensionWithSdk)
 				{
