@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 must-be.org
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.consulo.idea.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 10:08/16.06.13
+ * @since 25.08.2015
  */
-public class IdeaContentEntryModel
+public class IdeaContentFolderModel
 {
-	private final String myUrl;
-	private List<IdeaContentFolderModel> myContentFolderTypes = new ArrayList<IdeaContentFolderModel>();
+	private String myUrl;
+	private Map<String, String> myProperties = new HashMap<String, String>();
 
-	public IdeaContentEntryModel(String url)
+	public IdeaContentFolderModel(String url)
 	{
 		myUrl = url;
 	}
@@ -37,15 +38,20 @@ public class IdeaContentEntryModel
 		return myUrl;
 	}
 
-	public List<IdeaContentFolderModel> getContentFolders()
+	public IdeaContentFolderModel addProperty(String name, String value)
 	{
-		return myContentFolderTypes;
+		myProperties.put(name, value);
+		return this;
 	}
 
-	public IdeaContentFolderModel addFolder(String url)
+	public String getProperty(String name)
 	{
-		IdeaContentFolderModel e = new IdeaContentFolderModel(url);
-		myContentFolderTypes.add(e);
-		return e;
+		return myProperties.get(name);
+	}
+
+	public boolean getBoolProperty(String name)
+	{
+		String property = getProperty(name);
+		return property != null && Boolean.parseBoolean(property);
 	}
 }

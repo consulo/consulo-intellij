@@ -23,6 +23,7 @@ import javax.swing.Icon;
 
 import org.consulo.idea.IdeaConstants;
 import org.consulo.idea.IdeaIcons;
+import org.consulo.idea.model.IdeaContentFolderModel;
 import org.consulo.idea.model.IdeaLibraryModel;
 import org.consulo.idea.model.IdeaModuleTableModel;
 import org.consulo.idea.model.IdeaProjectLibraryTableModel;
@@ -35,6 +36,12 @@ import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.roots.ContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider;
+import org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
@@ -42,6 +49,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ExportableOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
@@ -133,11 +141,29 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 			{
 				val contentEntry = modifiableModel.addContentEntry(ideaContentEntryModel.getUrl());
 
-				for(val entry : ideaContentEntryModel.getContentFolderTypes().entrySet())
+				for(IdeaContentFolderModel entry : ideaContentEntryModel.getContentFolders())
 				{
-					for(val url : entry.getValue())
+					ContentFolderTypeProvider provider = ProductionContentFolderTypeProvider.getInstance();
+					if(entry.getBoolProperty("isTestSource"))
 					{
-						contentEntry.addFolder(url, entry.getKey());
+						provider = TestContentFolderTypeProvider.getInstance();
+					}
+
+					String type = entry.getProperty("type");
+					if("java-resource".equals(type))
+					{
+						provider = ProductionResourceContentFolderTypeProvider.getInstance();
+					}
+					else if("java-test-resource".equals(type))
+					{
+						provider = TestResourceContentFolderTypeProvider.getInstance();
+					}
+
+					ContentFolder contentFolder = contentEntry.addFolder(entry.getUrl(), provider);
+
+					if(entry.getBoolProperty("generated"))
+					{
+						contentFolder.setPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED, Boolean.TRUE);
 					}
 				}
 			}

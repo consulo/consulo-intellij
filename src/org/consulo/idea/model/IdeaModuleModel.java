@@ -32,8 +32,6 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -103,11 +101,14 @@ public class IdeaModuleModel implements IdeaParseableModel
 					final String nameChildOfContent = childOfContent.getName();
 					if("sourceFolder".equals(nameChildOfContent))
 					{
-						String url2 = childOfContent.getAttributeValue("url");
-						boolean isTestSource = Boolean.valueOf(childOfContent.getAttributeValue("isTestSource"));
+						String sourceFolderUrl = childOfContent.getAttributeValue("url");
 
-						contentEntryModel.addFolder(url2, isTestSource ? TestContentFolderTypeProvider.getInstance() :
-								ProductionContentFolderTypeProvider.getInstance());
+						IdeaContentFolderModel folderModel = contentEntryModel.addFolder(sourceFolderUrl);
+
+						for(Attribute attribute : childOfContent.getAttributes())
+						{
+							folderModel.addProperty(attribute.getName(), attribute.getValue());
+						}
 					}
 				}
 			}
