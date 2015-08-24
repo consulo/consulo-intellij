@@ -31,6 +31,7 @@ import org.consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP;
+import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +57,7 @@ import lombok.val;
  * @author VISTALL
  * @since 18:49/14.06.13
  */
+@Logger
 public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 {
 	@NotNull
@@ -145,7 +147,13 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 				OrderEntry orderEntry = null;
 				if(orderEntryModel instanceof ModuleIdeaOrderEntryModel)
 				{
-					orderEntry = modifiableModel.addInvalidModuleEntry(((ModuleIdeaOrderEntryModel) orderEntryModel).getModuleName());
+					String moduleName = ((ModuleIdeaOrderEntryModel) orderEntryModel).getModuleName();
+					if(moduleName.equals(module.getName()))
+					{
+						LOGGER.error("Cant add self to module dependecies: " + moduleName);
+						continue;
+					}
+					orderEntry = modifiableModel.addInvalidModuleEntry(moduleName);
 				}
 				else if(orderEntryModel instanceof ProjectLibraryIdeaOrderEntryModel)
 				{
