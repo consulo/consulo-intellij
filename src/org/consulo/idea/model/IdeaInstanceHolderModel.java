@@ -25,7 +25,7 @@ import com.intellij.util.ReflectionUtil;
  * @author VISTALL
  * @since 10:09/16.06.13
  */
-public class HolderModel
+public class IdeaInstanceHolderModel
 {
 	protected Map<Class, Object> myInstances = new LinkedHashMap<Class, Object>();
 

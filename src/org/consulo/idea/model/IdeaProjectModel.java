@@ -30,7 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
  * @author VISTALL
  * @since 9:49/16.06.13
  */
-public class IdeaProjectModel extends HolderModel implements IdeaParseableModel
+public class IdeaProjectModel extends IdeaInstanceHolderModel implements IdeaParseableModel
 {
 	private File myIdeaProjectDir;
 
