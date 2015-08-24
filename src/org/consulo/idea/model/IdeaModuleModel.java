@@ -175,4 +175,10 @@ public class IdeaModuleModel implements IdeaParseableModel
 	{
 		return myGroup;
 	}
+
+	@Override
+	public String toString()
+	{
+		return myFilePath.getPath();
+	}
 }

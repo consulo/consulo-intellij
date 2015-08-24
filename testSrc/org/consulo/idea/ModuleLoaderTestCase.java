@@ -29,7 +29,7 @@ public abstract class ModuleLoaderTestCase extends TestCase {
 
   @Override
   protected void runTest() throws Throwable {
-    final File projectDir = new File("plugins/idea/testData/" + getName());
+    final File projectDir = new File("testData/" + getName());
     final File ideaProjectDir = new File(projectDir, IdeaConstants.PROJECT_DIR);
 
     assertTrue(projectDir.exists());

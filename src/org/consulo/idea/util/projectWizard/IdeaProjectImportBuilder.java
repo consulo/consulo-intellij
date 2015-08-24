@@ -176,7 +176,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 					String moduleName = ((ModuleIdeaOrderEntryModel) orderEntryModel).getModuleName();
 					if(moduleName.equals(module.getName()))
 					{
-						LOGGER.error("Cant add self to module dependecies: " + moduleName);
+						LOGGER.error("Cant add self to module dependencies: " + moduleName + ": " + moduleFile.getAbsolutePath());
 						continue;
 					}
 					orderEntry = modifiableModel.addInvalidModuleEntry(moduleName);

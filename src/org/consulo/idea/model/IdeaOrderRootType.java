@@ -28,20 +28,34 @@ import com.intellij.openapi.roots.types.SourcesOrderRootType;
  */
 public enum IdeaOrderRootType
 {
-	CLASSES(BinariesOrderRootType.getInstance()),
-	DOCUMENTATION(DocumentationOrderRootType.getInstance()),
-	SOURCES(SourcesOrderRootType.getInstance());
-
-	private OrderRootType myOrderRootType;
-
-	IdeaOrderRootType(OrderRootType orderRootType)
-	{
-		myOrderRootType = orderRootType;
-	}
+	CLASSES
+			{
+				@NotNull
+				@Override
+				public OrderRootType getOrderRootType()
+				{
+					return BinariesOrderRootType.getInstance();
+				}
+			},
+	DOCUMENTATION
+			{
+				@NotNull
+				@Override
+				public OrderRootType getOrderRootType()
+				{
+					return DocumentationOrderRootType.getInstance();
+				}
+			},
+	SOURCES
+			{
+				@NotNull
+				@Override
+				public OrderRootType getOrderRootType()
+				{
+					return SourcesOrderRootType.getInstance();
+				}
+			};
 
 	@NotNull
-	public OrderRootType getOrderRootType()
-	{
-		return myOrderRootType;
-	}
+	public abstract OrderRootType getOrderRootType();
 }
