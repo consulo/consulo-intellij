@@ -22,6 +22,7 @@ import java.util.Map;
 import org.consulo.idea.model.IdeaLibraryModel;
 import org.consulo.idea.model.IdeaModuleModel;
 import org.consulo.idea.model.IdeaModuleTableModel;
+import org.consulo.idea.model.IdeaOrderRootType;
 import org.consulo.idea.model.IdeaProjectLibraryTableModel;
 import org.consulo.idea.model.IdeaProjectModel;
 import org.consulo.projectImport.ProjectModelProcessor;
@@ -30,7 +31,6 @@ import org.consulo.projectImport.model.library.LibraryModel;
 import org.consulo.projectImport.model.library.OrderRootTypeModel;
 import org.consulo.projectImport.model.module.ModuleModel;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.io.FileUtilRt;
 
 /**
@@ -47,7 +47,7 @@ public class IdeaProjectModelProcessor extends ProjectModelProcessor<IdeaProject
 		for(IdeaLibraryModel ideaLibraryModel : otherModel.getInstance(IdeaProjectLibraryTableModel.class).getLibraries())
 		{
 			LibraryModel libraryModel = new LibraryModel(ideaLibraryModel.getName());
-			for(Map.Entry<OrderRootType, Collection<String>> entry : ideaLibraryModel.getOrderRoots().entrySet())
+			for(Map.Entry<IdeaOrderRootType, Collection<String>> entry : ideaLibraryModel.getOrderRoots().entrySet())
 			{
 				for(String url : entry.getValue())
 				{
@@ -75,17 +75,17 @@ public class IdeaProjectModelProcessor extends ProjectModelProcessor<IdeaProject
 		return o instanceof IdeaProjectModel;
 	}
 
-	private static OrderRootTypeModel fromIdeaOrderToConsuloOrderType(@NotNull OrderRootType orderRootType)
+	private static OrderRootTypeModel fromIdeaOrderToConsuloOrderType(@NotNull IdeaOrderRootType orderRootType)
 	{
-		if(orderRootType == OrderRootType.CLASSES)
+		if(orderRootType == IdeaOrderRootType.CLASSES)
 		{
 			return OrderRootTypeModel.BINARIES;
 		}
-		else if(orderRootType == OrderRootType.DOCUMENTATION)
+		else if(orderRootType == IdeaOrderRootType.DOCUMENTATION)
 		{
 			return OrderRootTypeModel.DOCUMENTATION;
 		}
-		else if(orderRootType == OrderRootType.SOURCES)
+		else if(orderRootType == IdeaOrderRootType.SOURCES)
 		{
 			return OrderRootTypeModel.SOURCES;
 		}

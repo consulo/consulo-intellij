@@ -21,6 +21,7 @@ import org.consulo.idea.model.IdeaContentEntryModel;
 import org.consulo.idea.model.IdeaLibraryModel;
 import org.consulo.idea.model.IdeaModuleModel;
 import org.consulo.idea.model.IdeaModuleTableModel;
+import org.consulo.idea.model.IdeaOrderRootType;
 import org.consulo.idea.model.IdeaProjectLibraryTableModel;
 import org.consulo.idea.model.IdeaProjectModel;
 import org.consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
@@ -31,7 +32,6 @@ import org.consulo.idea.model.orderEnties.ModuleSourceIdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
-import com.intellij.openapi.roots.OrderRootType;
 
 /**
  * @author VISTALL
@@ -46,7 +46,7 @@ public class ModuleLoaderTest extends ModuleLoaderTestCase {
     final List<IdeaLibraryModel> libraries = libraryTableModel.getLibraries();
     assertEquals(libraries.size(), 1);
     assertEquals(libraries.get(0).getName(), "concierge-1.0.0");
-    assertEquals(libraries.get(0).getOrderRoots().get(OrderRootType.CLASSES).size(), 1);
+    assertEquals(libraries.get(0).getOrderRoots().get(IdeaOrderRootType.CLASSES).size(), 1);
 
     final IdeaModuleTableModel moduleTableModel = ideaProjectModel.getInstance(IdeaModuleTableModel.class);
     assertEquals(moduleTableModel.getModules().size(), 2);

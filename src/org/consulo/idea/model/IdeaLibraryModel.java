@@ -16,7 +16,7 @@
 package org.consulo.idea.model;
 
 import org.jdom.Element;
-import com.intellij.openapi.roots.OrderRootType;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;
 
@@ -26,7 +26,7 @@ import com.intellij.util.containers.MultiMap;
  */
 public class IdeaLibraryModel
 {
-	private final MultiMap<OrderRootType, String> myOrderRoots = new LinkedMultiMap<OrderRootType, String>();
+	private final MultiMap<IdeaOrderRootType, String> myOrderRoots = new LinkedMultiMap<IdeaOrderRootType, String>();
 	private String myName;
 
 	public IdeaLibraryModel()
@@ -42,15 +42,24 @@ public class IdeaLibraryModel
 		{
 			final String libraryEntryName = libraryEntry.getName();
 
-			OrderRootType orderRootType = ideaProjectModel.findOrderRootType(libraryEntryName);
-			if(orderRootType != null)
+			IdeaOrderRootType orderRootType = null;
+			try
 			{
-				parse(libraryEntry, orderRootType);
+				orderRootType = IdeaOrderRootType.valueOf(libraryEntryName);
 			}
+			catch(IllegalArgumentException ignored)
+			{
+			}
+
+			if(orderRootType == null)
+			{
+				continue;
+			}
+			parse(libraryEntry, orderRootType);
 		}
 	}
 
-	private void parse(Element element, OrderRootType orderRootType)
+	private void parse(Element element, @NotNull IdeaOrderRootType orderRootType)
 	{
 		for(Element child : element.getChildren())
 		{
@@ -64,7 +73,8 @@ public class IdeaLibraryModel
 		}
 	}
 
-	public MultiMap<OrderRootType, String> getOrderRoots()
+	@NotNull
+	public MultiMap<IdeaOrderRootType, String> getOrderRoots()
 	{
 		return myOrderRoots;
 	}

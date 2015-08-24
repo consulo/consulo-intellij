@@ -18,8 +18,6 @@ package org.consulo.idea;
 import java.io.File;
 
 import org.consulo.idea.model.IdeaProjectModel;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.roots.OrderRootType;
 import junit.framework.TestCase;
 
 /**
@@ -37,23 +35,7 @@ public abstract class ModuleLoaderTestCase extends TestCase {
     assertTrue(projectDir.exists());
     assertTrue(ideaProjectDir.exists());
 
-    myIdeaProjectModel = new IdeaProjectModel(ideaProjectDir)
-    {
-      @Nullable
-      @Override
-      public OrderRootType findOrderRootType(String libraryEntryName) {
-        if(libraryEntryName.equals("CLASSES")) {
-          return OrderRootType.CLASSES;
-        }
-        else if(libraryEntryName.equals("SOURCES")) {
-          return OrderRootType.SOURCES;
-        }
-        else if(libraryEntryName.equals("DOCUMENTATION")) {
-          return OrderRootType.DOCUMENTATION;
-        }
-        return null;
-      }
-    };
+    myIdeaProjectModel = new IdeaProjectModel(ideaProjectDir);
 
     super.runTest();
   }

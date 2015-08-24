@@ -232,9 +232,9 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 		val modifiableModel = library.getModifiableModel();
 		for(val entry : ideaLibraryModel.getOrderRoots().entrySet())
 		{
-			for(val url : entry.getValue())
+			for(String url : entry.getValue())
 			{
-				modifiableModel.addRoot(url, entry.getKey());
+				modifiableModel.addRoot(url, entry.getKey().getOrderRootType());
 			}
 		}
 
