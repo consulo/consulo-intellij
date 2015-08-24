@@ -31,6 +31,7 @@ import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
 import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
 import lombok.SneakyThrows;
@@ -45,11 +46,11 @@ public class IdeaModuleModel implements IdeaParseableModel
 	private final List<IdeaContentEntryModel> myContentEntries = new ArrayList<IdeaContentEntryModel>();
 	private final List<IdeaOrderEntryModel> myOrderEntries = new ArrayList<IdeaOrderEntryModel>();
 	private final Map<String, String> myComponentAttributes = new HashMap<String, String>();
-	private final String myFilePath;
+	private final File myFilePath;
 	private final String myGroup;
 	private String myModuleType;
 
-	public IdeaModuleModel(String filepath, String group)
+	public IdeaModuleModel(File filepath, String group)
 	{
 		myFilePath = filepath;
 		myGroup = group;
@@ -74,7 +75,7 @@ public class IdeaModuleModel implements IdeaParseableModel
 	@Override
 	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
 	{
-		val moduleFile = new File(myFilePath);
+		val moduleFile = myFilePath;
 		val document = ideaProjectModel.loadDocument(moduleFile);
 
 		IdeaProjectModel.expand("$MODULE_DIR$", moduleFile.getParentFile().getAbsolutePath(), document.getRootElement());
@@ -163,7 +164,8 @@ public class IdeaModuleModel implements IdeaParseableModel
 		return myModuleType;
 	}
 
-	public String getFilePath()
+	@NotNull
+	public File getFile()
 	{
 		return myFilePath;
 	}

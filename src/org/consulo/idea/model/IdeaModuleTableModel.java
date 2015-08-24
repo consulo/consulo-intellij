@@ -46,19 +46,24 @@ public class IdeaModuleTableModel implements IdeaParseableModel
 
 		XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*");
 
-		final List list = xpathExpression.selectNodes(document);
+		//noinspection unchecked
+		final List<Element> list = xpathExpression.selectNodes(document);
 
-		for(Object o : list)
+		for(Element element : list)
 		{
-			Element element = (Element) o;
-
 			String filepath = element.getAttributeValue("filepath");
 			if(filepath == null)
 			{
 				continue;
 			}
 
-			final IdeaModuleModel moduleModel = new IdeaModuleModel(filepath, element.getAttributeValue("group"));
+			File file = new File(filepath);
+			if(!file.exists())
+			{
+				continue;
+			}
+
+			final IdeaModuleModel moduleModel = new IdeaModuleModel(file, element.getAttributeValue("group"));
 			moduleModel.load(ideaProjectModel, ideaProjectDir);
 			myModules.add(moduleModel);
 		}

@@ -61,7 +61,7 @@ public class IdeaProjectModelProcessor extends ProjectModelProcessor<IdeaProject
 		// convert modules
 		for(IdeaModuleModel ideaModuleModel : otherModel.getInstance(IdeaModuleTableModel.class).getModules())
 		{
-			File moduleFile = new File(ideaModuleModel.getFilePath());
+			File moduleFile = ideaModuleModel.getFile();
 
 			ModuleModel moduleModel = new ModuleModel(FileUtilRt.getNameWithoutExtension(moduleFile.getName()), moduleFile.getParent());
 

@@ -113,7 +113,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 		val modules = new ArrayList<Module>();
 		for(val ideaModuleModel : ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules())
 		{
-			val moduleFile = new File(ideaModuleModel.getFilePath());
+			val moduleFile = ideaModuleModel.getFile();
 
 			val module = newModel.newModule(FileUtil.getNameWithoutExtension(moduleFile), moduleFile.getParent());
 
