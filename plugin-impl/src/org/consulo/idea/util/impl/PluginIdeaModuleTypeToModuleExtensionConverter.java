@@ -15,6 +15,11 @@
  */
 package org.consulo.idea.util.impl;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootModel;
+import com.intellij.pom.java.LanguageLevel;
+import consulo.devkit.module.extension.PluginMutableModuleExtension;
 import org.consulo.idea.model.IdeaModuleModel;
 import org.consulo.idea.model.IdeaProjectModel;
 import org.consulo.idea.model.orderEnties.IdeaOrderEntryModel;
@@ -23,12 +28,7 @@ import org.consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.idea.devkit.module.extension.PluginMutableModuleExtension;
 import org.mustbe.consulo.java.module.extension.JavaMutableModuleExtension;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.pom.java.LanguageLevel;
 
 /**
  * @author VISTALL
