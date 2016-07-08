@@ -39,7 +39,6 @@ import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
 import org.consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP;
-import org.consulo.lombok.annotations.Logger;
 import org.consulo.module.extension.ModuleExtension;
 import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
@@ -70,6 +69,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
+import consulo.lombok.annotations.Logger;
 import lombok.val;
 
 /**
