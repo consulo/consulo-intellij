@@ -17,12 +17,13 @@ package org.consulo.idea.util;
 
 import org.consulo.idea.model.IdeaModuleModel;
 import org.consulo.idea.model.IdeaProjectModel;
-import org.consulo.module.extension.MutableModuleExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.module.extension.ModuleExtensionProviderEP;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootModel;
+import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.extension.MutableModuleExtension;
 
 /**
  * @author VISTALL
@@ -30,6 +31,8 @@ import com.intellij.openapi.roots.ModuleRootModel;
  */
 public abstract class IdeaModuleTypeToModuleExtensionConverter<T extends IdeaModuleTypeConfigurationPanel>
 {
+	public static final KeyedExtensionCollector<IdeaModuleTypeToModuleExtensionConverter, String> EP = new KeyedExtensionCollector<>("consulo.intellij.moduleTypeToModuleExtensionConverter");
+
 	@Nullable
 	public T createConfigurationPanel(@NotNull Project project, @NotNull IdeaProjectModel ideaProjectModel,
 			@NotNull IdeaModuleModel ideaModuleModel)

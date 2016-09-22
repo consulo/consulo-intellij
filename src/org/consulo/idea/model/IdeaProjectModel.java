@@ -24,6 +24,7 @@ import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.components.PathMacroMap;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 
 /**
@@ -33,17 +34,39 @@ import com.intellij.openapi.util.text.StringUtil;
 public class IdeaProjectModel extends IdeaInstanceHolderModel implements IdeaParseableModel
 {
 	private File myIdeaProjectDir;
+	private String myName;
 
-	public IdeaProjectModel(File ideaProjectDir)
+	public IdeaProjectModel(File dotIdeaDirectory)
 	{
-		myIdeaProjectDir = ideaProjectDir;
+		myIdeaProjectDir = dotIdeaDirectory;
 		getInstance(IdeaProjectLibraryTableModel.class);
 		getInstance(IdeaProjectRootModel.class);
 		getInstance(IdeaModuleTableModel.class);
 
-		load(this, ideaProjectDir);
+		load(this, dotIdeaDirectory);
+
+		File nameFile = new File(dotIdeaDirectory, ".name");
+		if(nameFile.exists())
+		{
+			try
+			{
+				myName = FileUtil.loadFile(nameFile);
+			}
+			catch(IOException ignored)
+			{
+			}
+		}
+
+		if(myName == null)
+		{
+			myName = dotIdeaDirectory.getParent();
+		}
 	}
 
+	public String getName()
+	{
+		return myName;
+	}
 
 	@NotNull
 	public Document loadDocument(final File file) throws JDOMException, IOException

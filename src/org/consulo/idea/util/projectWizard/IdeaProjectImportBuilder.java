@@ -38,18 +38,8 @@ import org.consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
 import org.consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
 import org.consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
-import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverterEP;
-import org.consulo.module.extension.ModuleExtension;
-import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.roots.ContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.TestResourceContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
@@ -57,6 +47,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ExportableOrderEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -69,7 +61,16 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
+import consulo.annotations.RequiredReadAction;
 import consulo.lombok.annotations.Logger;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionWithSdk;
+import consulo.roots.ContentFolderTypeProvider;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
+import consulo.roots.impl.TestContentFolderTypeProvider;
+import consulo.roots.impl.TestResourceContentFolderTypeProvider;
+import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 import lombok.val;
 
 /**
@@ -117,19 +118,21 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 	@Nullable
 	@Override
 	@RequiredReadAction
-	public List<Module> commit(Project project,
-			ModifiableModuleModel originalModel,
-			ModulesProvider modulesProvider,
-			ModifiableArtifactModel artifactModel)
+	public List<Module> commit(Project project, ModifiableModuleModel originalModel, ModulesProvider modulesProvider, ModifiableArtifactModel artifactModel)
 	{
-		val projectPath = project.getBasePath();
-		val file = new File(projectPath, IdeaConstants.PROJECT_DIR);
-		if(!file.exists())
+		File dotIdeaDirectory = new File(getFileToImport(), IdeaConstants.PROJECT_DIR);
+		if(!dotIdeaDirectory.exists())
 		{
 			return null;
 		}
 
-		val ideaProjectModel = new IdeaProjectModel(file);
+		IdeaProjectModel ideaProjectModel = new IdeaProjectModel(dotIdeaDirectory);
+
+		boolean projectNull = project == null;
+		if(project == null)
+		{
+			project = ProjectManager.getInstance().createProject(ideaProjectModel.getName(), getFileToImport());
+		}
 
 		val fromProjectStructure = originalModel != null;
 		val newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
@@ -141,11 +144,9 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 		for(IdeaModuleModel ideaModuleModel : ideaModuleModels)
 		{
 			String moduleType = ideaModuleModel.getModuleType();
-			IdeaModuleTypeToModuleExtensionConverter instance = IdeaModuleTypeToModuleExtensionConverterEP.EP
-					.findSingle(moduleType);
+			IdeaModuleTypeToModuleExtensionConverter instance = IdeaModuleTypeToModuleExtensionConverter.EP.findSingle(moduleType);
 
-			IdeaModuleTypeConfigurationPanel configurationPanel = instance.createConfigurationPanel(project,
-					ideaProjectModel, ideaModuleModel);
+			IdeaModuleTypeConfigurationPanel configurationPanel = instance.createConfigurationPanel(project, ideaProjectModel, ideaModuleModel);
 			if(configurationPanel != null)
 			{
 				map.put(moduleType, configurationPanel);
@@ -211,8 +212,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 
 					if(entry.getBoolProperty("generated"))
 					{
-						contentFolder.setPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED,
-								Boolean.TRUE);
+						contentFolder.setPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED, Boolean.TRUE);
 					}
 				}
 			}
@@ -222,13 +222,11 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 				OrderEntry orderEntry = null;
 				if(orderEntryModel instanceof ModuleIdeaOrderEntryModel)
 				{
-					orderEntry = modifiableModel.addInvalidModuleEntry(((ModuleIdeaOrderEntryModel) orderEntryModel)
-							.getModuleName());
+					orderEntry = modifiableModel.addInvalidModuleEntry(((ModuleIdeaOrderEntryModel) orderEntryModel).getModuleName());
 				}
 				else if(orderEntryModel instanceof ProjectLibraryIdeaOrderEntryModel)
 				{
-					orderEntry = modifiableModel.addInvalidLibrary(((ProjectLibraryIdeaOrderEntryModel)
-							orderEntryModel).getLibraryName(), "project");
+					orderEntry = modifiableModel.addInvalidLibrary(((ProjectLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryName(), "project");
 				}
 				else if(orderEntryModel instanceof ModuleLibraryIdeaOrderEntryModel)
 				{
@@ -253,8 +251,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 			IdeaModuleTypeConfigurationPanel ideaModuleTypeConfigurationPanel = map.get(moduleType);
 			if(ideaModuleTypeConfigurationPanel != null)
 			{
-				IdeaModuleTypeToModuleExtensionConverter converter = IdeaModuleTypeToModuleExtensionConverterEP.EP
-						.findSingle(moduleType);
+				IdeaModuleTypeToModuleExtensionConverter converter = IdeaModuleTypeToModuleExtensionConverter.EP.findSingle(moduleType);
 				assert converter != null;
 				//noinspection unchecked
 				converter.convertTypeToExtension(modifiableModel, ideaModuleModel, ideaModuleTypeConfigurationPanel);
@@ -305,6 +302,11 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 				}
 			}
 		}.execute();
+
+		if(projectNull)
+		{
+			ProjectManagerEx.getInstanceEx().openProject(project);
+		}
 		return modules;
 	}
 

@@ -18,9 +18,9 @@ package org.consulo.idea.model;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.roots.types.DocumentationOrderRootType;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.DocumentationOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 
 /**
  * @author VISTALL

@@ -39,12 +39,9 @@ public class IdeaProjectImportProvider extends ProjectImportProvider
 	{
 		if(fileOrDirectory.isDirectory())
 		{
-			return true;
+			return fileOrDirectory.findChild(IdeaConstants.PROJECT_DIR) != null;
 		}
-		else
-		{
-			return canImportFromFile(fileOrDirectory);
-		}
+		return false;
 	}
 
 	@Override

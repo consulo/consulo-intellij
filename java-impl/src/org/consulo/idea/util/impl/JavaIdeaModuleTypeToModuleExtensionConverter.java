@@ -23,10 +23,10 @@ import org.consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
 import org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.java.module.extension.JavaMutableModuleExtension;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.pom.java.LanguageLevel;
+import consulo.java.module.extension.JavaMutableModuleExtension;
 
 /**
  * @author VISTALL
