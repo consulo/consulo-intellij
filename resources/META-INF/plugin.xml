@@ -16,19 +16,19 @@
 <idea-plugin version="2">
 	<id>consulo.intellij</id>
 	<name>IntelliJ Project Importer</name>
-	<category>mport</category>
+	<category>Import</category>
 	<depends optional="true" config-file="consulo.java.xml">consulo.java</depends>
 	<depends optional="true" config-file="consulo.devkit.xml">consulo.devkit</depends>
 
 	<extensionPoints>
 		<extensionPoint name="moduleTypeToModuleExtensionConverter" beanClass="com.intellij.util.KeyedLazyInstanceEP">
-			<with attribute="implementationClass" implements="org.consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter"/>
+			<with attribute="implementationClass" implements="consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter"/>
 		</extensionPoint>
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<projectImportProvider implementation="org.consulo.idea.util.projectWizard.IdeaProjectImportProvider"/>
+		<projectImportProvider implementation="consulo.idea.util.projectWizard.IdeaProjectImportProvider"/>
 
-		<fileTypeFactory implementation="org.consulo.idea.file.IdeaModuleFileTypeFactory"/>
+		<fileTypeFactory implementation="consulo.idea.file.IdeaModuleFileTypeFactory"/>
 	</extensions>
 </idea-plugin>
