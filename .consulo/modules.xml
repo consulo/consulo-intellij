@@ -4,9 +4,8 @@
     <modules>
       <module name="consulo-intellij" dirurl="file://$PROJECT_DIR$" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo SNAPSHOT" />
-          <extension id="java" sdk-module-name="" sdk-name="1.8" language-level-module-name="" language-level-name="JDK_1_8" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
-          <extension id="lombok" />
+          <extension id="consulo-plugin" sdk-name="Consulo SNAPSHOT" />
+          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
@@ -19,8 +18,8 @@
       </module>
       <module name="java-impl" dirurl="file://$PROJECT_DIR$/java-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-intellij" sdk-name="Consulo 1.SNAPSHOT" />
-          <extension id="java" sdk-module-name="consulo-intellij" sdk-name="1.6" language-level-module-name="consulo-intellij" language-level-name="JDK_1_6" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-intellij" />
+          <extension id="java" sdk-module-name="consulo-intellij" language-level-module-name="consulo-intellij" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>
@@ -33,8 +32,8 @@
       </module>
       <module name="plugin-impl" dirurl="file://$PROJECT_DIR$/plugin-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-intellij" sdk-name="Consulo 1.SNAPSHOT" />
-          <extension id="java" sdk-module-name="" sdk-name="1.8" language-level-module-name="" language-level-name="JDK_1_8" special-dir-location="SOURCE_DIR" bytecode-version="1.8" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-intellij" />
+          <extension id="java" sdk-name="1.8" language-level-name="JDK_1_8" bytecode-version="1.8" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
           </content>

@@ -16,13 +16,15 @@
 package consulo.idea.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
-import lombok.SneakyThrows;
+import com.intellij.openapi.diagnostic.Logger;
 
 /**
  * @author VISTALL
@@ -30,42 +32,50 @@ import lombok.SneakyThrows;
  */
 public class IdeaModuleTableModel implements IdeaParseableModel
 {
+	private static final Logger LOGGER = Logger.getInstance(IdeaModuleTableModel.class);
+
 	private final List<IdeaModuleModel> myModules = new ArrayList<IdeaModuleModel>();
 
 	@Override
-	@SneakyThrows
 	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
 	{
-		File modulesFile = new File(ideaProjectDir, "modules.xml");
-		if(!modulesFile.exists())
+		try
 		{
-			return;
+			File modulesFile = new File(ideaProjectDir, "modules.xml");
+			if(!modulesFile.exists())
+			{
+				return;
+			}
+
+			final Document document = ideaProjectModel.loadDocument(modulesFile);
+
+			XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*");
+
+			//noinspection unchecked
+			final List<Element> list = xpathExpression.selectNodes(document);
+
+			for(Element element : list)
+			{
+				String filepath = element.getAttributeValue("filepath");
+				if(filepath == null)
+				{
+					continue;
+				}
+
+				File file = new File(filepath);
+				if(!file.exists())
+				{
+					continue;
+				}
+
+				final IdeaModuleModel moduleModel = new IdeaModuleModel(file, element.getAttributeValue("group"));
+				moduleModel.load(ideaProjectModel, ideaProjectDir);
+				myModules.add(moduleModel);
+			}
 		}
-
-		final Document document = ideaProjectModel.loadDocument(modulesFile);
-
-		XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*");
-
-		//noinspection unchecked
-		final List<Element> list = xpathExpression.selectNodes(document);
-
-		for(Element element : list)
+		catch(JDOMException | IOException e)
 		{
-			String filepath = element.getAttributeValue("filepath");
-			if(filepath == null)
-			{
-				continue;
-			}
-
-			File file = new File(filepath);
-			if(!file.exists())
-			{
-				continue;
-			}
-
-			final IdeaModuleModel moduleModel = new IdeaModuleModel(file, element.getAttributeValue("group"));
-			moduleModel.load(ideaProjectModel, ideaProjectDir);
-			myModules.add(moduleModel);
+			LOGGER.error(e);
 		}
 	}
 

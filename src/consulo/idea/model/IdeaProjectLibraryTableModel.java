@@ -17,13 +17,15 @@ package consulo.idea.model;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.io.FileUtilRt;
-import lombok.SneakyThrows;
 
 /**
  * @author VISTALL
@@ -31,43 +33,44 @@ import lombok.SneakyThrows;
  */
 public class IdeaProjectLibraryTableModel extends IdeaLibraryTableModel implements IdeaParseableModel
 {
+	private static final Logger LOGGER = Logger.getInstance(IdeaProjectLibraryTableModel.class);
+
 	private final List<IdeaLibraryModel> myLibraries = new ArrayList<IdeaLibraryModel>();
 
 	@Override
-	@SneakyThrows
 	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
 	{
-		File file = new File(ideaProjectDir, "libraries");
-		if(!file.exists())
+		try
 		{
-			return;
-		}
-
-		final FilenameFilter filter = new FilenameFilter()
-		{
-			@Override
-			public boolean accept(File dir, String name)
+			File file = new File(ideaProjectDir, "libraries");
+			if(!file.exists())
 			{
-				return FileUtilRt.getExtension(name).equalsIgnoreCase("xml");
+				return;
 			}
-		};
 
-		for(File child : file.listFiles(filter))
-		{
-			final Document document = ideaProjectModel.loadDocument(child);
+			final FilenameFilter filter = (dir, name) -> FileUtilRt.getExtension(name).equalsIgnoreCase("xml");
 
-			final Element rootElement = document.getRootElement();
-			final String attributeValue = rootElement.getAttributeValue("name");
-			if("libraryTable".equals(attributeValue))
+			for(File child : file.listFiles(filter))
 			{
-				final Element libraryElement = rootElement.getChild("library");
-				if(libraryElement != null)
+				final Document document = ideaProjectModel.loadDocument(child);
+
+				final Element rootElement = document.getRootElement();
+				final String attributeValue = rootElement.getAttributeValue("name");
+				if("libraryTable".equals(attributeValue))
 				{
-					IdeaLibraryModel libraryModel = new IdeaLibraryModel();
-					libraryModel.load(ideaProjectModel, rootElement);
-					myLibraries.add(libraryModel);
+					final Element libraryElement = rootElement.getChild("library");
+					if(libraryElement != null)
+					{
+						IdeaLibraryModel libraryModel = new IdeaLibraryModel();
+						libraryModel.load(ideaProjectModel, rootElement);
+						myLibraries.add(libraryModel);
+					}
 				}
 			}
+		}
+		catch(JDOMException | IOException e)
+		{
+			LOGGER.error(e);
 		}
 	}
 

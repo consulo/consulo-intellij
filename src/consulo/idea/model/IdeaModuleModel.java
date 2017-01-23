@@ -19,6 +19,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.xpath.XPath;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.diagnostic.Logger;
 import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
@@ -26,12 +32,6 @@ import consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.ModuleSourceIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
-import org.jdom.Attribute;
-import org.jdom.Element;
-import org.jdom.xpath.XPath;
-import org.jetbrains.annotations.NotNull;
-import lombok.SneakyThrows;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -39,6 +39,8 @@ import lombok.val;
  */
 public class IdeaModuleModel extends IdeaPropertyHolderModel<IdeaModuleModel> implements IdeaParseableModel
 {
+	private static final Logger LOGGER = Logger.getInstance(IdeaModuleModel.class);
+
 	private final List<IdeaContentEntryModel> myContentEntries = new ArrayList<IdeaContentEntryModel>();
 	private final List<IdeaOrderEntryModel> myOrderEntries = new ArrayList<IdeaOrderEntryModel>();
 	private final File myFilePath;
@@ -61,94 +63,100 @@ public class IdeaModuleModel extends IdeaPropertyHolderModel<IdeaModuleModel> im
 		return myOrderEntries;
 	}
 
-	@SneakyThrows
 	@Override
 	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
 	{
-		val moduleFile = myFilePath;
-		val document = ideaProjectModel.loadDocument(moduleFile);
-
-		IdeaProjectModel.expand("$MODULE_DIR$", moduleFile.getParentFile().getAbsolutePath(), document.getRootElement());
-
-		myModuleType = document.getRootElement().getAttributeValue("type");
-		XPath xpathExpression = XPath.newInstance("/module[@version='4']/component[@name='NewModuleRootManager']");
-		final Element componentNode = (Element) xpathExpression.selectSingleNode(document);
-		for(Attribute attribute : componentNode.getAttributes())
+		try
 		{
-			addProperty(attribute.getName(), attribute.getValue());
-		}
+			File moduleFile = myFilePath;
+			Document document = ideaProjectModel.loadDocument(moduleFile);
 
-		for(Element element : componentNode.getChildren())
-		{
-			final String name = element.getName();
-			if("content".equals(name))
+			IdeaProjectModel.expand("$MODULE_DIR$", moduleFile.getParentFile().getAbsolutePath(), document.getRootElement());
+
+			myModuleType = document.getRootElement().getAttributeValue("type");
+			XPath xpathExpression = XPath.newInstance("/module[@version='4']/component[@name='NewModuleRootManager']");
+			final Element componentNode = (Element) xpathExpression.selectSingleNode(document);
+			for(Attribute attribute : componentNode.getAttributes())
 			{
-				final String url = element.getAttributeValue("url");
+				addProperty(attribute.getName(), attribute.getValue());
+			}
 
-				final IdeaContentEntryModel contentEntryModel = new IdeaContentEntryModel(url);
-				myContentEntries.add(contentEntryModel);
-
-				for(Element childOfContent : element.getChildren())
+			for(Element element : componentNode.getChildren())
+			{
+				final String name = element.getName();
+				if("content".equals(name))
 				{
-					final String nameChildOfContent = childOfContent.getName();
-					if("sourceFolder".equals(nameChildOfContent))
+					final String url = element.getAttributeValue("url");
+
+					final IdeaContentEntryModel contentEntryModel = new IdeaContentEntryModel(url);
+					myContentEntries.add(contentEntryModel);
+
+					for(Element childOfContent : element.getChildren())
 					{
-						String sourceFolderUrl = childOfContent.getAttributeValue("url");
-
-						IdeaContentFolderModel folderModel = contentEntryModel.addFolder(sourceFolderUrl);
-
-						for(Attribute attribute : childOfContent.getAttributes())
+						final String nameChildOfContent = childOfContent.getName();
+						if("sourceFolder".equals(nameChildOfContent))
 						{
-							folderModel.addProperty(attribute.getName(), attribute.getValue());
+							String sourceFolderUrl = childOfContent.getAttributeValue("url");
+
+							IdeaContentFolderModel folderModel = contentEntryModel.addFolder(sourceFolderUrl);
+
+							for(Attribute attribute : childOfContent.getAttributes())
+							{
+								folderModel.addProperty(attribute.getName(), attribute.getValue());
+							}
 						}
 					}
 				}
-			}
-			else if("orderEntry".equals(name))
-			{
-				IdeaOrderEntryModel orderEntryModel = null;
-				String type = element.getAttributeValue("type");
-				if("module".equals(type))
+				else if("orderEntry".equals(name))
 				{
-					String moduleName = element.getAttributeValue("module-name");
-
-					orderEntryModel = new ModuleIdeaOrderEntryModel(moduleName);
-				}
-				else if("sourceFolder".equals(type))
-				{
-					orderEntryModel = new ModuleSourceIdeaOrderEntryModel();
-				}
-				else if("inheritedJdk".equals(type))
-				{
-					orderEntryModel = new InheritedIdeaOrderEntryModel();
-				}
-				else if("module-library".equals(type))
-				{
-					IdeaLibraryModel libraryModel = new IdeaLibraryModel();
-					libraryModel.load(ideaProjectModel, element);
-
-					orderEntryModel = new ModuleLibraryIdeaOrderEntryModel(libraryModel);
-				}
-				else if("jdk".equals(type))
-				{
-					orderEntryModel = new JdkSourceIdeaOrderEntryModel(element.getAttributeValue("jdkName"));
-				}
-				else if("library".equals(type))
-				{
-					final String level = element.getAttributeValue("level");
-					if("project".equals(level))
+					IdeaOrderEntryModel orderEntryModel = null;
+					String type = element.getAttributeValue("type");
+					if("module".equals(type))
 					{
-						orderEntryModel = new ProjectLibraryIdeaOrderEntryModel(element.getAttributeValue("name"));
+						String moduleName = element.getAttributeValue("module-name");
+
+						orderEntryModel = new ModuleIdeaOrderEntryModel(moduleName);
+					}
+					else if("sourceFolder".equals(type))
+					{
+						orderEntryModel = new ModuleSourceIdeaOrderEntryModel();
+					}
+					else if("inheritedJdk".equals(type))
+					{
+						orderEntryModel = new InheritedIdeaOrderEntryModel();
+					}
+					else if("module-library".equals(type))
+					{
+						IdeaLibraryModel libraryModel = new IdeaLibraryModel();
+						libraryModel.load(ideaProjectModel, element);
+
+						orderEntryModel = new ModuleLibraryIdeaOrderEntryModel(libraryModel);
+					}
+					else if("jdk".equals(type))
+					{
+						orderEntryModel = new JdkSourceIdeaOrderEntryModel(element.getAttributeValue("jdkName"));
+					}
+					else if("library".equals(type))
+					{
+						final String level = element.getAttributeValue("level");
+						if("project".equals(level))
+						{
+							orderEntryModel = new ProjectLibraryIdeaOrderEntryModel(element.getAttributeValue("name"));
+						}
+					}
+
+					if(orderEntryModel != null)
+					{
+						myOrderEntries.add(orderEntryModel);
+
+						orderEntryModel.setExported(element.getAttribute("exported") != null);
 					}
 				}
-
-				if(orderEntryModel != null)
-				{
-					myOrderEntries.add(orderEntryModel);
-
-					orderEntryModel.setExported(element.getAttribute("exported") != null);
-				}
 			}
+		}
+		catch(Exception e)
+		{
+			LOGGER.error(e);
 		}
 	}
 

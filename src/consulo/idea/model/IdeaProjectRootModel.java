@@ -17,12 +17,14 @@
 package consulo.idea.model;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
-import lombok.SneakyThrows;
+import com.intellij.openapi.diagnostic.Logger;
 
 /**
  * @author VISTALL
@@ -30,29 +32,37 @@ import lombok.SneakyThrows;
  */
 public class IdeaProjectRootModel extends IdeaPropertyHolderModel<IdeaProjectRootModel> implements IdeaParseableModel
 {
+	private static final Logger LOGGER = Logger.getInstance(IdeaProjectRootModel.class);
+
 	@Override
-	@SneakyThrows
 	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
 	{
-		File miscFile = new File(ideaProjectDir, "misc.xml");
-		if(!miscFile.exists())
+		try
 		{
-			return;
+			File miscFile = new File(ideaProjectDir, "misc.xml");
+			if(!miscFile.exists())
+			{
+				return;
+			}
+
+			final Document document = ideaProjectModel.loadDocument(miscFile);
+
+			XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectRootManager']");
+
+			final Element element = (Element) xpathExpression.selectSingleNode(document);
+			if(element == null)
+			{
+				return;
+			}
+
+			for(Attribute attribute : element.getAttributes())
+			{
+				addProperty(attribute.getName(), attribute.getValue());
+			}
 		}
-
-		final Document document = ideaProjectModel.loadDocument(miscFile);
-
-		XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectRootManager']");
-
-		final Element element = (Element) xpathExpression.selectSingleNode(document);
-		if(element == null)
+		catch(JDOMException | IOException e)
 		{
-			return;
-		}
-
-		for(Attribute attribute : element.getAttributes())
-		{
-			addProperty(attribute.getName(), attribute.getValue());
+			LOGGER.error(e);
 		}
 	}
 

@@ -17,27 +17,13 @@ package consulo.idea.util.projectWizard;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.Icon;
 
-import consulo.idea.IdeaConstants;
-import consulo.idea.IdeaIcons;
-import consulo.idea.model.IdeaContentEntryModel;
-import consulo.idea.model.IdeaContentFolderModel;
-import consulo.idea.model.IdeaLibraryModel;
-import consulo.idea.model.IdeaModuleModel;
-import consulo.idea.model.IdeaModuleTableModel;
-import consulo.idea.model.IdeaProjectLibraryTableModel;
-import consulo.idea.model.IdeaProjectModel;
-import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
-import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
-import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.application.Result;
@@ -49,6 +35,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ContentFolder;
 import com.intellij.openapi.roots.ExportableOrderEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -56,13 +43,29 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.packaging.artifacts.ModifiableArtifactModel;
 import com.intellij.projectImport.ProjectImportBuilder;
 import consulo.annotations.RequiredReadAction;
-import consulo.lombok.annotations.Logger;
+import consulo.idea.IdeaConstants;
+import consulo.idea.IdeaIcons;
+import consulo.idea.model.IdeaContentEntryModel;
+import consulo.idea.model.IdeaContentFolderModel;
+import consulo.idea.model.IdeaLibraryModel;
+import consulo.idea.model.IdeaModuleModel;
+import consulo.idea.model.IdeaModuleTableModel;
+import consulo.idea.model.IdeaOrderRootType;
+import consulo.idea.model.IdeaProjectLibraryTableModel;
+import consulo.idea.model.IdeaProjectModel;
+import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
+import consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
+import consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
+import consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
+import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
+import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.ContentFolderTypeProvider;
@@ -71,13 +74,11 @@ import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
-import lombok.val;
 
 /**
  * @author VISTALL
  * @since 18:49/14.06.13
  */
-@Logger
 public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 {
 	@NotNull
@@ -134,8 +135,8 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 			project = ProjectManager.getInstance().createProject(ideaProjectModel.getName(), getFileToImport());
 		}
 
-		val fromProjectStructure = originalModel != null;
-		val newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
+		boolean fromProjectStructure = originalModel != null;
+		ModifiableModuleModel newModel = fromProjectStructure ? originalModel : ModuleManager.getInstance(project).getModifiableModel();
 
 		List<IdeaModuleModel> ideaModuleModels = ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules();
 
@@ -188,7 +189,7 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 
 			for(IdeaContentEntryModel ideaContentEntryModel : contentEntries)
 			{
-				val contentEntry = modifiableModel.addContentEntry(ideaContentEntryModel.getUrl());
+				ContentEntry contentEntry = modifiableModel.addContentEntry(ideaContentEntryModel.getUrl());
 
 				for(IdeaContentFolderModel entry : ideaContentEntryModel.getContentFolders())
 				{
@@ -230,9 +231,9 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 				}
 				else if(orderEntryModel instanceof ModuleLibraryIdeaOrderEntryModel)
 				{
-					val libraryModel = ((ModuleLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryModel();
+					IdeaLibraryModel libraryModel = ((ModuleLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryModel();
 
-					val library = modifiableModel.getModuleLibraryTable().createLibrary(libraryModel.getName());
+					Library library = modifiableModel.getModuleLibraryTable().createLibrary(libraryModel.getName());
 
 					convertLibrary(library, libraryModel);
 
@@ -279,13 +280,13 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 			}.execute();
 		}
 
-		val libraryTable = ProjectLibraryTable.getInstance(project);
+		LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
 
-		val libraryTableModifiableModel = libraryTable.getModifiableModel();
+		LibraryTable.ModifiableModel libraryTableModifiableModel = libraryTable.getModifiableModel();
 
-		for(val ideaLibraryModel : ideaProjectModel.getInstance(IdeaProjectLibraryTableModel.class).getLibraries())
+		for(IdeaLibraryModel ideaLibraryModel : ideaProjectModel.getInstance(IdeaProjectLibraryTableModel.class).getLibraries())
 		{
-			val library = libraryTableModifiableModel.createLibrary(ideaLibraryModel.getName());
+			Library library = libraryTableModifiableModel.createLibrary(ideaLibraryModel.getName());
 
 			convertLibrary(library, ideaLibraryModel);
 		}
@@ -312,8 +313,8 @@ public class IdeaProjectImportBuilder extends ProjectImportBuilder<Object>
 
 	private static void convertLibrary(Library library, IdeaLibraryModel ideaLibraryModel)
 	{
-		val modifiableModel = library.getModifiableModel();
-		for(val entry : ideaLibraryModel.getOrderRoots().entrySet())
+		Library.ModifiableModel modifiableModel = library.getModifiableModel();
+		for(Map.Entry<IdeaOrderRootType, Collection<String>> entry : ideaLibraryModel.getOrderRoots().entrySet())
 		{
 			for(String url : entry.getValue())
 			{
