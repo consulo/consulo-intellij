@@ -13,7 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<idea-plugin version="2">
+<idea-plugin>
 	<id>consulo.intellij</id>
 	<name>IntelliJ Project Importer</name>
 	<category>Import</category>
@@ -27,7 +27,7 @@
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<projectImportProvider implementation="consulo.idea.util.projectWizard.IdeaProjectImportProvider"/>
+		<moduleImportProvider implementation="consulo.idea.util.projectWizard.IdeaProjectImportProvider"/>
 
 		<fileTypeFactory implementation="consulo.idea.file.IdeaModuleFileTypeFactory"/>
 	</extensions>

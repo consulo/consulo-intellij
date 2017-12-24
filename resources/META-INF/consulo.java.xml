@@ -13,7 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<idea-plugin version="2">
+<idea-plugin>
 	<extensions defaultExtensionNs="consulo.intellij">
 		<moduleTypeToModuleExtensionConverter key="JAVA_MODULE"
 											  implementationClass="consulo.idea.util.impl.JavaIdeaModuleTypeToModuleExtensionConverter"/>

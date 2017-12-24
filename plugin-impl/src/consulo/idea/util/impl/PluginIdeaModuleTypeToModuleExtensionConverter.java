@@ -15,19 +15,18 @@
  */
 package consulo.idea.util.impl;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootModel;
+import com.intellij.pom.java.LanguageLevel;
+import consulo.devkit.module.extension.PluginMutableModuleExtension;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.pom.java.LanguageLevel;
-import consulo.devkit.module.extension.PluginMutableModuleExtension;
 import consulo.java.module.extension.JavaMutableModuleExtension;
 
 /**
@@ -38,9 +37,9 @@ public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTy
 {
 	@Nullable
 	@Override
-	public PluginConfigurationPanel createConfigurationPanel(@NotNull Project project, @NotNull IdeaProjectModel ideaProjectModel, @NotNull IdeaModuleModel ideaModuleModel)
+	public PluginConfigurationPanel createConfigurationPanel(@NotNull IdeaProjectModel ideaProjectModel, @NotNull IdeaModuleModel ideaModuleModel)
 	{
-		return new PluginConfigurationPanel(project, ideaProjectModel);
+		return new PluginConfigurationPanel(ideaProjectModel);
 	}
 
 	@Override

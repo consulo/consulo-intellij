@@ -16,13 +16,12 @@
 
 package consulo.idea.util.impl;
 
-import consulo.idea.model.IdeaProjectModel;
 import org.jetbrains.idea.devkit.sdk.ConsuloSdkType;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Condition;
+import consulo.idea.model.IdeaProjectModel;
 import consulo.roots.ui.configuration.SdkComboBox;
 import consulo.util.ui.components.VerticalLayoutPanel;
 
@@ -34,9 +33,9 @@ public class PluginConfigurationPanel extends JavaConfigurationPanel
 {
 	private SdkComboBox myPluginSdkComboBox;
 
-	public PluginConfigurationPanel(Project project, IdeaProjectModel ideaProjectModel)
+	public PluginConfigurationPanel(IdeaProjectModel ideaProjectModel)
 	{
-		super(project, ideaProjectModel);
+		super(ideaProjectModel);
 	}
 
 	@Override

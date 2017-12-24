@@ -19,45 +19,29 @@ package consulo.idea.util.projectWizard;
 import java.awt.BorderLayout;
 import java.util.Map;
 
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.IdeBorderFactory;
+import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 
 /**
  * @author VISTALL
  * @since 25.08.2015
  */
-public class IdeaModuleConfigurationDialog extends DialogWrapper
+public class IdeaModuleConfigurationStep extends ModuleWizardStep
 {
 	private Map<String, IdeaModuleTypeConfigurationPanel> myMap;
 
-	public IdeaModuleConfigurationDialog(@NotNull Project project, Map<String, IdeaModuleTypeConfigurationPanel> map)
+	public IdeaModuleConfigurationStep(Map<String, IdeaModuleTypeConfigurationPanel> map)
 	{
-		super(project);
 		myMap = map;
-		setTitle("IntelliJ Importer");
-		init();
-		pack();
 	}
 
 	@Override
-	@NotNull
-	protected Action[] createActions()
-	{
-		return new Action[]{getOKAction()};
-	}
-
-	@Nullable
-	@Override
-	protected JComponent createCenterPanel()
+	public JComponent getComponent()
 	{
 		JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
 		for(Map.Entry<String, IdeaModuleTypeConfigurationPanel> entry : myMap.entrySet())
@@ -69,5 +53,10 @@ public class IdeaModuleConfigurationDialog extends DialogWrapper
 			panel.add(somePanel);
 		}
 		return panel;
+	}
+
+	@Override
+	public void updateDataModel()
+	{
 	}
 }

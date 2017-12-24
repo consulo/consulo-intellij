@@ -3,7 +3,6 @@
     <binaries>
       <root url="jar://$PROJECT_DIR$/dep/consulo.devkit/lib/devkit.jar!/" />
       <root url="jar://$PROJECT_DIR$/dep/consulo.devkit/lib/dtdparser113.jar!/" />
-      <root url="jar://$PROJECT_DIR$/dep/consulo.devkit/lib/devkit-lombok.jar!/" />
     </binaries>
   </library>
 </component>

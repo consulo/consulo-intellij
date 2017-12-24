@@ -19,11 +19,7 @@ package consulo.idea.util.impl;
 import javax.swing.JComponent;
 import javax.swing.JList;
 
-import consulo.idea.model.IdeaProjectModel;
-import consulo.idea.model.IdeaProjectRootModel;
-import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
@@ -34,6 +30,9 @@ import com.intellij.openapi.util.Condition;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.util.ui.JBUI;
+import consulo.idea.model.IdeaProjectModel;
+import consulo.idea.model.IdeaProjectRootModel;
+import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.roots.ui.configuration.SdkComboBox;
 import consulo.util.ui.components.VerticalLayoutPanel;
 
@@ -47,7 +46,7 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 	private ComboBox myLanguageLevelBox;
 	private IdeaProjectModel myIdeaProjectModel;
 
-	public JavaConfigurationPanel(Project project, IdeaProjectModel ideaProjectModel)
+	public JavaConfigurationPanel(IdeaProjectModel ideaProjectModel)
 	{
 		myIdeaProjectModel = ideaProjectModel;
 	}

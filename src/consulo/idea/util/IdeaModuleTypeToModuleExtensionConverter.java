@@ -15,13 +15,12 @@
  */
 package consulo.idea.util;
 
-import consulo.idea.model.IdeaModuleModel;
-import consulo.idea.model.IdeaProjectModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.idea.model.IdeaModuleModel;
+import consulo.idea.model.IdeaProjectModel;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.MutableModuleExtension;
 
@@ -34,8 +33,7 @@ public abstract class IdeaModuleTypeToModuleExtensionConverter<T extends IdeaMod
 	public static final KeyedExtensionCollector<IdeaModuleTypeToModuleExtensionConverter, String> EP = new KeyedExtensionCollector<>("consulo.intellij.moduleTypeToModuleExtensionConverter");
 
 	@Nullable
-	public T createConfigurationPanel(@NotNull Project project, @NotNull IdeaProjectModel ideaProjectModel,
-			@NotNull IdeaModuleModel ideaModuleModel)
+	public T createConfigurationPanel(@NotNull IdeaProjectModel ideaProjectModel, @NotNull IdeaModuleModel ideaModuleModel)
 	{
 		return null;
 	}
