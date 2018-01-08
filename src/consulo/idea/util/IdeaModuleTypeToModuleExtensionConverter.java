@@ -19,10 +19,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.util.KeyedExtensionCollector;
+import consulo.annotations.RequiredReadAction;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.module.extension.ModuleExtensionProviderEP;
 import consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.impl.ModuleExtensionProviders;
 
 /**
  * @author VISTALL
@@ -38,15 +40,13 @@ public abstract class IdeaModuleTypeToModuleExtensionConverter<T extends IdeaMod
 		return null;
 	}
 
-	public abstract void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel,
-			@NotNull IdeaModuleModel ideaModuleModel,
-			@Nullable T panel);
+	@RequiredReadAction
+	public abstract void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel, @NotNull IdeaModuleModel ideaModuleModel, @Nullable T panel);
 
 	@SuppressWarnings("unchecked")
-	protected static <K extends MutableModuleExtension<?>> K enableExtensionById(@NotNull String id,
-			@NotNull ModuleRootModel rootModel)
+	protected static <K extends MutableModuleExtension<?>> K enableExtensionById(@NotNull String id, @NotNull ModuleRootModel rootModel)
 	{
-		final ModuleExtensionProviderEP provider = ModuleExtensionProviderEP.findProviderEP(id);
+		ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(id);
 		if(provider == null)
 		{
 			return null;

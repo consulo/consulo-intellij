@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.pom.java.LanguageLevel;
+import consulo.annotations.RequiredReadAction;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
@@ -39,10 +40,9 @@ public class JavaIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleType
 		return new JavaConfigurationPanel(ideaProjectModel);
 	}
 
+	@RequiredReadAction
 	@Override
-	public void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel,
-			@NotNull IdeaModuleModel ideaModuleModel,
-			@Nullable JavaConfigurationPanel javaConfigurationPanel)
+	public void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel, @NotNull IdeaModuleModel ideaModuleModel, @Nullable JavaConfigurationPanel javaConfigurationPanel)
 	{
 		assert javaConfigurationPanel != null;
 
@@ -57,8 +57,7 @@ public class JavaIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleType
 			}
 			else if(ideaOrderEntryModel instanceof JdkSourceIdeaOrderEntryModel)
 			{
-				moduleExtension.getInheritableSdk().set(null, ((JdkSourceIdeaOrderEntryModel) ideaOrderEntryModel)
-						.getJdkName());
+				moduleExtension.getInheritableSdk().set(null, ((JdkSourceIdeaOrderEntryModel) ideaOrderEntryModel).getJdkName());
 			}
 		}
 
@@ -77,8 +76,7 @@ public class JavaIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleType
 		}
 		else
 		{
-			moduleExtension.getInheritableLanguageLevel().set(null, (LanguageLevel) javaConfigurationPanel.getLanguageLevelBox()
-					.getSelectedItem());
+			moduleExtension.getInheritableLanguageLevel().set(null, (LanguageLevel) javaConfigurationPanel.getLanguageLevelBox().getSelectedItem());
 		}
 	}
 }

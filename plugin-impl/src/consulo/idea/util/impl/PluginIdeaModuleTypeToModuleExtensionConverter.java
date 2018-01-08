@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.pom.java.LanguageLevel;
+import consulo.annotations.RequiredReadAction;
 import consulo.devkit.module.extension.PluginMutableModuleExtension;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaProjectModel;
@@ -42,6 +43,7 @@ public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTy
 		return new PluginConfigurationPanel(ideaProjectModel);
 	}
 
+	@RequiredReadAction
 	@Override
 	public void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel, @NotNull IdeaModuleModel ideaModuleModel, @Nullable PluginConfigurationPanel pluginConfigurationPanel)
 	{

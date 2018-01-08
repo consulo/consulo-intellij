@@ -34,7 +34,7 @@ public class IdeaModuleFileType implements FileType
 
 	@NotNull
 	@Override
-	public String getName()
+	public String getId()
 	{
 		return "IDEA_MODULE";
 	}
