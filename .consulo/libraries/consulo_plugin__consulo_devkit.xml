@@ -1,8 +1,0 @@
-<component name="libraryTable">
-  <library name="consulo-plugin: consulo.devkit">
-    <binaries>
-      <root url="jar://$PROJECT_DIR$/dep/consulo.devkit/lib/dtdparser-1.21.jar!/" />
-      <root url="jar://$PROJECT_DIR$/dep/consulo.devkit/lib/consulo.devkit-2-SNAPSHOT.jar!/" />
-    </binaries>
-  </library>
-</component>
