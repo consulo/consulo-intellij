@@ -20,7 +20,7 @@
 
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.managment</artifactId>
+		<artifactId>arch.ide-provided</artifactId>
 		<version>2-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
@@ -37,14 +37,48 @@
 	</repositories>
 
 	<groupId>consulo.plugin</groupId>
-	<artifactId>consulo.intellij.parent</artifactId>
+	<artifactId>consulo.intellij</artifactId>
 	<version>2-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>consulo-plugin</packaging>
 
-	<modules>
-		<module>api</module>
-		<module>plugin</module>
-		<module>java-impl</module>
-		<module>devkit-impl</module>
-	</modules>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>consulo.maven</groupId>
+				<artifactId>consulo-maven-plugin</artifactId>
+				<version>2-SNAPSHOT</version>
+				<extensions>true</extensions>
+				<configuration>
+					<repositoryChannel>nightly</repositoryChannel>
+					<dependencies>
+						<dependency>consulo.java</dependency>
+						<dependency>consulo.devkit</dependency>
+						<dependency>com.intellij.xml</dependency>
+						<dependency>com.intellij.properties</dependency>
+						<dependency>com.intellij.uiDesigner</dependency>
+					</dependencies>
+					<packaging>
+						<skip>${dev.mode}</skip>
+						<version>${build.number}</version>
+					</packaging>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>workspace</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>consulo.intellij-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>

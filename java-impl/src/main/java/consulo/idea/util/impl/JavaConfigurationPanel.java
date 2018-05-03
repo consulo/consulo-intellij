@@ -37,13 +37,13 @@ import consulo.roots.ui.configuration.SdkComboBox;
 import consulo.util.ui.components.VerticalLayoutPanel;
 
 /**
-* @author VISTALL
-* @since 25.08.2015
-*/
+ * @author VISTALL
+ * @since 25.08.2015
+ */
 public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 {
 	private SdkComboBox mySdkComboBox;
-	private ComboBox myLanguageLevelBox;
+	private ComboBox<LanguageLevel> myLanguageLevelBox;
 	private IdeaProjectModel myIdeaProjectModel;
 
 	public JavaConfigurationPanel(IdeaProjectModel ideaProjectModel)
@@ -83,16 +83,12 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 			}
 		}
 
-		myLanguageLevelBox = new ComboBox(LanguageLevel.values());
+		myLanguageLevelBox = new ComboBox<>(LanguageLevel.values());
 		myLanguageLevelBox.setSelectedItem(LanguageLevel.HIGHEST);
 		myLanguageLevelBox.setRenderer(new ColoredListCellRendererWrapper<LanguageLevel>()
 		{
 			@Override
-			protected void doCustomize(JList list,
-					LanguageLevel value,
-					int index,
-					boolean selected,
-					boolean hasFocus)
+			protected void doCustomize(JList list, LanguageLevel value, int index, boolean selected, boolean hasFocus)
 			{
 				append(value.getShortText());
 			}

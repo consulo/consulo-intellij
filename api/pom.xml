@@ -20,7 +20,7 @@
 
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.managment</artifactId>
+		<artifactId>arch.ide-provided</artifactId>
 		<version>2-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
@@ -37,14 +37,7 @@
 	</repositories>
 
 	<groupId>consulo.plugin</groupId>
-	<artifactId>consulo.intellij.parent</artifactId>
+	<artifactId>consulo.intellij-api</artifactId>
 	<version>2-SNAPSHOT</version>
-	<packaging>pom</packaging>
-
-	<modules>
-		<module>api</module>
-		<module>plugin</module>
-		<module>java-impl</module>
-		<module>devkit-impl</module>
-	</modules>
+	<packaging>jar</packaging>
 </project>

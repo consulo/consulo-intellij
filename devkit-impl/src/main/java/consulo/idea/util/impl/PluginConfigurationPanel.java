@@ -49,7 +49,7 @@ public class PluginConfigurationPanel extends JavaConfigurationPanel
 				return sdkTypeId == ConsuloSdkType.getInstance();
 			}
 		}, true);
-		panel.addComponent(LabeledComponent.left(myPluginSdkComboBox, "IntelliJ Project SDK"));
+		panel.addComponent(LabeledComponent.create(myPluginSdkComboBox, "IntelliJ Project SDK"));
 	}
 
 	public SdkComboBox getPluginSdkComboBox()
