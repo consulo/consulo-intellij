@@ -18,7 +18,7 @@ package consulo.idea.util;
 
 import javax.swing.JComponent;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
 * @author VISTALL
@@ -26,6 +26,6 @@ import org.jetbrains.annotations.NotNull;
 */
 public interface IdeaModuleTypeConfigurationPanel
 {
-	@NotNull
+	@Nonnull
 	JComponent getComponent();
 }

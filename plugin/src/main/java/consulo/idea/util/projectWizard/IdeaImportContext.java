@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.idea.IdeaConstants;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaModuleTableModel;
@@ -55,7 +55,7 @@ public class IdeaImportContext extends ModuleImportContext
 		return super.setFileToImport(fileToImport);
 	}
 
-	@NotNull
+	@Nonnull
 	public Map<String, IdeaModuleTypeConfigurationPanel> getConfiguration()
 	{
 		if(myIdeaProjectModel == null)

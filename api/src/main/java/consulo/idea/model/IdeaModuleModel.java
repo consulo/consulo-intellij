@@ -19,11 +19,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
@@ -165,7 +166,7 @@ public class IdeaModuleModel extends IdeaPropertyHolderModel<IdeaModuleModel> im
 		return myModuleType;
 	}
 
-	@NotNull
+	@Nonnull
 	public File getFile()
 	{
 		return myFilePath;

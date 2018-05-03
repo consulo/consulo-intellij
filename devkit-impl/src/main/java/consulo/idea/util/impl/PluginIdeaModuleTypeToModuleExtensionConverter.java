@@ -15,8 +15,8 @@
  */
 package consulo.idea.util.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.pom.java.LanguageLevel;
@@ -38,14 +38,14 @@ public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTy
 {
 	@Nullable
 	@Override
-	public PluginConfigurationPanel createConfigurationPanel(@NotNull IdeaProjectModel ideaProjectModel, @NotNull IdeaModuleModel ideaModuleModel)
+	public PluginConfigurationPanel createConfigurationPanel(@Nonnull IdeaProjectModel ideaProjectModel, @Nonnull IdeaModuleModel ideaModuleModel)
 	{
 		return new PluginConfigurationPanel(ideaProjectModel);
 	}
 
 	@RequiredReadAction
 	@Override
-	public void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel, @NotNull IdeaModuleModel ideaModuleModel, @Nullable PluginConfigurationPanel pluginConfigurationPanel)
+	public void convertTypeToExtension(@Nonnull ModuleRootModel moduleRootModel, @Nonnull IdeaModuleModel ideaModuleModel, @Nullable PluginConfigurationPanel pluginConfigurationPanel)
 	{
 		assert pluginConfigurationPanel != null;
 

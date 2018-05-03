@@ -15,8 +15,8 @@
  */
 package consulo.idea.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import consulo.annotations.RequiredReadAction;
@@ -35,16 +35,16 @@ public abstract class IdeaModuleTypeToModuleExtensionConverter<T extends IdeaMod
 	public static final KeyedExtensionCollector<IdeaModuleTypeToModuleExtensionConverter, String> EP = new KeyedExtensionCollector<>("consulo.intellij.moduleTypeToModuleExtensionConverter");
 
 	@Nullable
-	public T createConfigurationPanel(@NotNull IdeaProjectModel ideaProjectModel, @NotNull IdeaModuleModel ideaModuleModel)
+	public T createConfigurationPanel(@Nonnull IdeaProjectModel ideaProjectModel, @Nonnull IdeaModuleModel ideaModuleModel)
 	{
 		return null;
 	}
 
 	@RequiredReadAction
-	public abstract void convertTypeToExtension(@NotNull ModuleRootModel moduleRootModel, @NotNull IdeaModuleModel ideaModuleModel, @Nullable T panel);
+	public abstract void convertTypeToExtension(@Nonnull ModuleRootModel moduleRootModel, @Nonnull IdeaModuleModel ideaModuleModel, @Nullable T panel);
 
 	@SuppressWarnings("unchecked")
-	protected static <K extends MutableModuleExtension<?>> K enableExtensionById(@NotNull String id, @NotNull ModuleRootModel rootModel)
+	protected static <K extends MutableModuleExtension<?>> K enableExtensionById(@Nonnull String id, @Nonnull ModuleRootModel rootModel)
 	{
 		ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(id);
 		if(provider == null)

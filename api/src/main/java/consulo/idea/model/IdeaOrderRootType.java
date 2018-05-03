@@ -16,7 +16,8 @@
 
 package consulo.idea.model;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.roots.OrderRootType;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.DocumentationOrderRootType;
@@ -30,7 +31,7 @@ public enum IdeaOrderRootType
 {
 	CLASSES
 			{
-				@NotNull
+				@Nonnull
 				@Override
 				public OrderRootType getOrderRootType()
 				{
@@ -39,7 +40,7 @@ public enum IdeaOrderRootType
 			},
 	DOCUMENTATION
 			{
-				@NotNull
+				@Nonnull
 				@Override
 				public OrderRootType getOrderRootType()
 				{
@@ -48,7 +49,7 @@ public enum IdeaOrderRootType
 			},
 	SOURCES
 			{
-				@NotNull
+				@Nonnull
 				@Override
 				public OrderRootType getOrderRootType()
 				{
@@ -56,6 +57,6 @@ public enum IdeaOrderRootType
 				}
 			};
 
-	@NotNull
+	@Nonnull
 	public abstract OrderRootType getOrderRootType();
 }

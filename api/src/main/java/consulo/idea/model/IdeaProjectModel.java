@@ -18,10 +18,11 @@ package consulo.idea.model;
 import java.io.File;
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.components.PathMacroMap;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
@@ -68,7 +69,7 @@ public class IdeaProjectModel extends IdeaInstanceHolderModel implements IdeaPar
 		return myName;
 	}
 
-	@NotNull
+	@Nonnull
 	public Document loadDocument(final File file) throws JDOMException, IOException
 	{
 		Document document = JDOMUtil.loadDocument(file);

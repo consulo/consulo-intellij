@@ -19,7 +19,7 @@ package consulo.idea.util.impl;
 import javax.swing.JComponent;
 import javax.swing.JList;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
@@ -51,7 +51,7 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 		myIdeaProjectModel = ideaProjectModel;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public JComponent getComponent()
 	{

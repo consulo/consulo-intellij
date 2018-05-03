@@ -19,7 +19,7 @@ package consulo.idea.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +29,7 @@ public abstract class IdeaPropertyHolderModel<T extends IdeaPropertyHolderModel<
 {
 	private Map<String, String> myProperties = new HashMap<String, String>();
 
-	@NotNull
+	@Nonnull
 	@SuppressWarnings("unchecked")
 	public T addProperty(String name, String value)
 	{

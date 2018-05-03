@@ -15,10 +15,10 @@
  */
 package consulo.idea.file;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.idea.IdeaIcons;
@@ -32,21 +32,21 @@ public class IdeaModuleFileType implements FileType
 	public static final String DEFAULT_EXTENSION = "iml";
 	public static final IdeaModuleFileType INSTANCE = new IdeaModuleFileType();
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getId()
 	{
 		return "IDEA_MODULE";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDescription()
 	{
 		return "IntelliJ IDEA module files";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDefaultExtension()
 	{
@@ -68,7 +68,7 @@ public class IdeaModuleFileType implements FileType
 
 	@Nullable
 	@Override
-	public String getCharset(@NotNull VirtualFile file, byte[] content)
+	public String getCharset(@Nonnull VirtualFile file, byte[] content)
 	{
 		return "UTF-8";
 	}

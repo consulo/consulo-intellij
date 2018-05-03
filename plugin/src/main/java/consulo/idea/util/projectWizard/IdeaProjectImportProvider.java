@@ -22,10 +22,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.ide.util.newProjectWizard.ProjectNameStep;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -81,7 +81,7 @@ import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
  */
 public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImportContext>
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{
@@ -96,7 +96,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 	}
 
 	@Override
-	public boolean canImport(@NotNull File fileOrDirectory)
+	public boolean canImport(@Nonnull File fileOrDirectory)
 	{
 		if(fileOrDirectory.isDirectory())
 		{
@@ -111,7 +111,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 		return true;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public IdeaImportContext createContext()
 	{
@@ -119,7 +119,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 	}
 
 	@Override
-	public ModuleWizardStep[] createSteps(@NotNull WizardContext context, @NotNull IdeaImportContext moduleImportContext)
+	public ModuleWizardStep[] createSteps(@Nonnull WizardContext context, @Nonnull IdeaImportContext moduleImportContext)
 	{
 		Map<String, IdeaModuleTypeConfigurationPanel> configuration = moduleImportContext.getConfiguration();
 		if(configuration.isEmpty())
@@ -129,13 +129,13 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 		return new ModuleWizardStep[]{new ProjectNameStep(context), new IdeaModuleConfigurationStep(configuration)};
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
-	public List<Module> commit(@NotNull IdeaImportContext context,
-			@NotNull Project project,
+	public List<Module> commit(@Nonnull IdeaImportContext context,
+			@Nonnull Project project,
 			@Nullable ModifiableModuleModel model,
-			@NotNull ModulesProvider modulesProvider,
+			@Nonnull ModulesProvider modulesProvider,
 			@Nullable ModifiableArtifactModel artifactModel)
 	{
 		IdeaProjectModel ideaProjectModel = context.getIdeaProjectModel();

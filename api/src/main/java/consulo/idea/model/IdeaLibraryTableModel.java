@@ -18,7 +18,7 @@ package consulo.idea.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +28,7 @@ public abstract class IdeaLibraryTableModel
 {
 	private final List<IdeaLibraryModel> myModels = new ArrayList<IdeaLibraryModel>();
 
-	@NotNull
+	@Nonnull
 	public List<IdeaLibraryModel> getModels()
 	{
 		return myModels;

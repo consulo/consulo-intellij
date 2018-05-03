@@ -15,8 +15,9 @@
  */
 package consulo.idea.model;
 
+import javax.annotation.Nonnull;
+
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.util.containers.LinkedMultiMap;
 import com.intellij.util.containers.MultiMap;
 
@@ -59,7 +60,7 @@ public class IdeaLibraryModel
 		}
 	}
 
-	private void parse(Element element, @NotNull IdeaOrderRootType orderRootType)
+	private void parse(Element element, @Nonnull IdeaOrderRootType orderRootType)
 	{
 		for(Element child : element.getChildren())
 		{
@@ -73,7 +74,7 @@ public class IdeaLibraryModel
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	public MultiMap<IdeaOrderRootType, String> getOrderRoots()
 	{
 		return myOrderRoots;
