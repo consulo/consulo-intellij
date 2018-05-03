@@ -24,23 +24,28 @@ import junit.framework.TestCase;
  * @author VISTALL
  * @since 17:03/18.06.13
  */
-public abstract class ModuleLoaderTestCase extends TestCase {
-  private IdeaProjectModel myIdeaProjectModel;
+public abstract class ModuleLoaderTestCase extends TestCase
+{
+	private IdeaProjectModel myIdeaProjectModel;
 
-  @Override
-  protected void runTest() throws Throwable {
-    final File projectDir = new File("testData/" + getName());
-    final File ideaProjectDir = new File(projectDir, IdeaConstants.PROJECT_DIR);
+	@Override
+	protected void runTest() throws Throwable
+	{
+		String path = getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 
-    assertTrue(projectDir.exists());
-    assertTrue(ideaProjectDir.exists());
+		final File projectDir = new File(path, getName());
+		final File ideaProjectDir = new File(projectDir, IdeaConstants.PROJECT_DIR);
 
-    myIdeaProjectModel = new IdeaProjectModel(ideaProjectDir);
+		assertTrue(projectDir.exists());
+		assertTrue(ideaProjectDir.exists());
 
-    super.runTest();
-  }
+		myIdeaProjectModel = new IdeaProjectModel(ideaProjectDir);
 
-  public IdeaProjectModel getIdeaProjectModel() {
-    return myIdeaProjectModel;
-  }
+		super.runTest();
+	}
+
+	public IdeaProjectModel getIdeaProjectModel()
+	{
+		return myIdeaProjectModel;
+	}
 }
