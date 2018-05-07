@@ -16,12 +16,12 @@
 package consulo.idea.file;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
+
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.idea.IdeaIcons;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -55,15 +55,9 @@ public class IdeaModuleFileType implements FileType
 
 	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return IdeaIcons.Idea;
-	}
-
-	@Override
-	public boolean isBinary()
-	{
-		return false;
 	}
 
 	@Nullable

@@ -109,8 +109,8 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 		}
 
 		VerticalLayoutPanel verticalLayoutPanel = JBUI.Panels.verticalPanel();
-		verticalLayoutPanel.addComponent(LabeledComponent.left(mySdkComboBox, "Java Project SDK"));
-		verticalLayoutPanel.addComponent(LabeledComponent.left(myLanguageLevelBox, "Java Language Level"));
+		verticalLayoutPanel.addComponent(LabeledComponent.create(mySdkComboBox, "Java Project SDK"));
+		verticalLayoutPanel.addComponent(LabeledComponent.create(myLanguageLevelBox, "Java Language Level"));
 		addOtherComponents(verticalLayoutPanel, model);
 		return verticalLayoutPanel;
 	}

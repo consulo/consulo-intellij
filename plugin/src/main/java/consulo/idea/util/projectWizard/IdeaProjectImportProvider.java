@@ -23,9 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
+
 import com.intellij.ide.util.newProjectWizard.ProjectNameStep;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -74,6 +73,7 @@ import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -88,9 +88,8 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 		return "IntelliJ Platform";
 	}
 
-	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return IdeaIcons.Idea;
 	}

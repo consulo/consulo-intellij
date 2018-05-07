@@ -15,9 +15,8 @@
  */
 package consulo.idea;
 
-import javax.swing.Icon;
-
 import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -25,5 +24,5 @@ import com.intellij.openapi.util.IconLoader;
  */
 public interface IdeaIcons
 {
-	Icon Idea = IconLoader.findIcon("/icons/idea.png");
+	Image Idea = IconLoader.findIcon("/icons/idea.png");
 }
