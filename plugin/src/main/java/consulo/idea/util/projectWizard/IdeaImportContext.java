@@ -16,14 +16,7 @@
 
 package consulo.idea.util.projectWizard;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.intellij.openapi.project.Project;
 import consulo.idea.IdeaConstants;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaModuleTableModel;
@@ -31,6 +24,14 @@ import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import consulo.moduleImport.ModuleImportContext;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -41,18 +42,24 @@ public class IdeaImportContext extends ModuleImportContext
 	private IdeaProjectModel myIdeaProjectModel;
 	private Map<String, IdeaModuleTypeConfigurationPanel> myConfigurationPanels;
 
+	public IdeaImportContext(@Nullable Project project)
+	{
+		super(project);
+	}
+
 	@Override
-	public ModuleImportContext setFileToImport(String fileToImport)
+	public void setFileToImport(String fileToImport)
 	{
 		File dotIdeaDirectory = new File(fileToImport, IdeaConstants.PROJECT_DIR);
 		if(!dotIdeaDirectory.exists())
 		{
-			return super.setFileToImport(fileToImport);
+			super.setFileToImport(fileToImport);
+			return;
 		}
 
 		myIdeaProjectModel = new IdeaProjectModel(dotIdeaDirectory);
 
-		return super.setFileToImport(fileToImport);
+		super.setFileToImport(fileToImport);
 	}
 
 	@Nonnull

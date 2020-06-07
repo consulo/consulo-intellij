@@ -16,14 +16,12 @@
 
 package consulo.idea.util.impl;
 
-import org.jetbrains.idea.devkit.sdk.ConsuloSdkType;
-import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.util.Condition;
+import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.roots.ui.configuration.SdkComboBox;
-import consulo.util.ui.components.VerticalLayoutPanel;
+import org.jetbrains.idea.devkit.sdk.ConsuloSdkType;
 
 /**
  * @author VISTALL
@@ -39,16 +37,9 @@ public class PluginConfigurationPanel extends JavaConfigurationPanel
 	}
 
 	@Override
-	protected void addOtherComponents(VerticalLayoutPanel panel, ProjectSdksModel model)
+	protected void addOtherComponents(VerticalLayoutPanel panel, DefaultSdksModel model)
 	{
-		myPluginSdkComboBox = new SdkComboBox(model, new Condition<SdkTypeId>()
-		{
-			@Override
-			public boolean value(SdkTypeId sdkTypeId)
-			{
-				return sdkTypeId == ConsuloSdkType.getInstance();
-			}
-		}, true);
+		myPluginSdkComboBox = new SdkComboBox(model, sdkTypeId -> sdkTypeId == ConsuloSdkType.getInstance(), true);
 		panel.addComponent(LabeledComponent.create(myPluginSdkComboBox, "IntelliJ Project SDK"));
 	}
 

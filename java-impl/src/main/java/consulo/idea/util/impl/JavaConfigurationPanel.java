@@ -16,25 +16,22 @@
 
 package consulo.idea.util.impl;
 
-import javax.swing.JComponent;
-import javax.swing.JList;
-
-import javax.annotation.Nonnull;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.util.Condition;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.ui.ColoredListCellRendererWrapper;
 import com.intellij.util.ui.JBUI;
+import consulo.desktop.util.awt.component.VerticalLayoutPanel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.model.IdeaProjectRootModel;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.roots.ui.configuration.SdkComboBox;
-import consulo.util.ui.components.VerticalLayoutPanel;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
 
 /**
  * @author VISTALL
@@ -55,17 +52,10 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 	@Override
 	public JComponent getComponent()
 	{
-		ProjectSdksModel model = new ProjectSdksModel();
+		DefaultSdksModel model = new DefaultSdksModel();
 		model.reset();
 
-		mySdkComboBox = new SdkComboBox(model, new Condition<SdkTypeId>()
-		{
-			@Override
-			public boolean value(SdkTypeId sdkTypeId)
-			{
-				return sdkTypeId == JavaSdk.getInstance();
-			}
-		}, true);
+		mySdkComboBox = new SdkComboBox(model, sdkTypeId -> sdkTypeId == JavaSdk.getInstance(), true);
 
 		IdeaProjectRootModel projectRootModel = myIdeaProjectModel.getInstance(IdeaProjectRootModel.class);
 
@@ -115,7 +105,7 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 		return verticalLayoutPanel;
 	}
 
-	protected void addOtherComponents(VerticalLayoutPanel panel, ProjectSdksModel projectSdksModel)
+	protected void addOtherComponents(VerticalLayoutPanel panel, DefaultSdksModel projectSdksModel)
 	{
 	}
 

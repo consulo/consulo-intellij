@@ -15,24 +15,19 @@
  */
 package consulo.idea.model;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.intellij.openapi.diagnostic.Logger;
+import consulo.idea.model.orderEnties.*;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.xpath.XPath;
-import com.intellij.openapi.diagnostic.Logger;
-import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.ModuleSourceIdeaOrderEntryModel;
-import consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
+import org.jdom.filter.Filters;
+import org.jdom.xpath.XPathExpression;
+import org.jdom.xpath.XPathFactory;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -75,8 +70,8 @@ public class IdeaModuleModel extends IdeaPropertyHolderModel<IdeaModuleModel> im
 			IdeaProjectModel.expand("$MODULE_DIR$", moduleFile.getParentFile().getAbsolutePath(), document.getRootElement());
 
 			myModuleType = document.getRootElement().getAttributeValue("type");
-			XPath xpathExpression = XPath.newInstance("/module[@version='4']/component[@name='NewModuleRootManager']");
-			final Element componentNode = (Element) xpathExpression.selectSingleNode(document);
+			XPathExpression<Element> xPathExpression = XPathFactory.instance().compile("/module[@version='4']/component[@name='NewModuleRootManager']", Filters.element());
+			final Element componentNode = xPathExpression.evaluateFirst(document);
 			for(Attribute attribute : componentNode.getAttributes())
 			{
 				addProperty(attribute.getName(), attribute.getValue());

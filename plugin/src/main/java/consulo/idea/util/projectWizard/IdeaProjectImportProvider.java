@@ -15,49 +15,21 @@
  */
 package consulo.idea.util.projectWizard;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.ide.util.newProjectWizard.ProjectNameStep;
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ContentFolder;
-import com.intellij.openapi.roots.ExportableOrderEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.packaging.artifacts.ModifiableArtifactModel;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
 import consulo.idea.IdeaConstants;
 import consulo.idea.IdeaIcons;
-import consulo.idea.model.IdeaContentEntryModel;
-import consulo.idea.model.IdeaContentFolderModel;
-import consulo.idea.model.IdeaLibraryModel;
-import consulo.idea.model.IdeaModuleModel;
-import consulo.idea.model.IdeaModuleTableModel;
-import consulo.idea.model.IdeaOrderRootType;
-import consulo.idea.model.IdeaProjectLibraryTableModel;
-import consulo.idea.model.IdeaProjectModel;
+import consulo.idea.model.*;
 import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
@@ -74,6 +46,15 @@ import consulo.roots.impl.TestContentFolderTypeProvider;
 import consulo.roots.impl.TestResourceContentFolderTypeProvider;
 import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
 import consulo.ui.image.Image;
+import consulo.ui.wizard.WizardStep;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -88,6 +69,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 		return "IntelliJ Platform";
 	}
 
+	@Nonnull
 	@Override
 	public Image getIcon()
 	{
@@ -112,45 +94,38 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 
 	@Nonnull
 	@Override
-	public IdeaImportContext createContext()
+	public IdeaImportContext createContext(@Nullable Project project)
 	{
-		return new IdeaImportContext();
+		return new IdeaImportContext(project);
 	}
 
 	@Override
-	public ModuleWizardStep[] createSteps(@Nonnull WizardContext context, @Nonnull IdeaImportContext moduleImportContext)
+	public void buildSteps(@Nonnull Consumer<WizardStep<IdeaImportContext>> consumer, @Nonnull IdeaImportContext context)
 	{
-		Map<String, IdeaModuleTypeConfigurationPanel> configuration = moduleImportContext.getConfiguration();
-		if(configuration.isEmpty())
+		Map<String, IdeaModuleTypeConfigurationPanel> configuration = context.getConfiguration();
+		consumer.accept(new ProjectOrModuleNameStep<>(context));
+
+		if(!configuration.isEmpty())
 		{
-			return new ModuleWizardStep[]{new ProjectNameStep(context)};
+			consumer.accept(new IdeaModuleConfigurationStep(configuration));
 		}
-		return new ModuleWizardStep[]{new ProjectNameStep(context), new IdeaModuleConfigurationStep(configuration)};
 	}
 
-	@Nonnull
-	@Override
 	@RequiredReadAction
-	public List<Module> commit(@Nonnull IdeaImportContext context,
-			@Nonnull Project project,
-			@Nullable ModifiableModuleModel model,
-			@Nonnull ModulesProvider modulesProvider,
-			@Nullable ModifiableArtifactModel artifactModel)
+	@Override
+	public void process(@Nonnull IdeaImportContext context, @Nonnull Project project, @Nonnull ModifiableModuleModel newModel, @Nonnull Consumer<Module> consumer)
 	{
 		IdeaProjectModel ideaProjectModel = context.getIdeaProjectModel();
 
 		if(ideaProjectModel == null)
 		{
-			return Collections.emptyList();
+			return;
 		}
-
-		ModifiableModuleModel newModel = model == null ? ModuleManager.getInstance(project).getModifiableModel() : model;
 
 		List<IdeaModuleModel> ideaModuleModels = ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules();
 
 		Map<String, IdeaModuleTypeConfigurationPanel> map = context.getConfiguration();
 
-		List<Module> modules = new ArrayList<>();
 		for(IdeaModuleModel ideaModuleModel : ideaModuleModels)
 		{
 			File moduleFile = ideaModuleModel.getFile();
@@ -166,7 +141,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 
 			Module module = newModel.newModule(nameWithoutExtension, modulePath);
 
-			modules.add(module);
+			consumer.accept(module);
 
 			final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
@@ -259,14 +234,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 				}
 			}
 
-			new WriteAction<Object>()
-			{
-				@Override
-				protected void run(Result<Object> result) throws Throwable
-				{
-					modifiableModel.commit();
-				}
-			}.execute();
+			WriteAction.run(modifiableModel::commit);
 		}
 
 		LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
@@ -280,20 +248,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 			convertLibrary(library, ideaLibraryModel);
 		}
 
-		new WriteAction<Object>()
-		{
-			@Override
-			protected void run(Result<Object> result) throws Throwable
-			{
-				libraryTableModifiableModel.commit();
-				if(model == null)
-				{
-					newModel.commit();
-				}
-			}
-		}.execute();
-
-		return modules;
+		WriteAction.run(libraryTableModifiableModel::commit);
 	}
 
 	private static void convertLibrary(Library library, IdeaLibraryModel ideaLibraryModel)
@@ -307,17 +262,9 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 			}
 		}
 
-		new WriteAction<Object>()
-		{
-			@Override
-			protected void run(Result<Object> result) throws Throwable
-			{
-				modifiableModel.commit();
-			}
-		}.execute();
+		WriteAction.run(modifiableModel::commit);
 	}
 
-	@Nullable
 	@Override
 	public String getFileSample()
 	{

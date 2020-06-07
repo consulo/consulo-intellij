@@ -15,12 +15,10 @@
  */
 package consulo.idea.util.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.pom.java.LanguageLevel;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.devkit.module.extension.PluginMutableModuleExtension;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaProjectModel;
@@ -29,6 +27,9 @@ import consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import consulo.java.module.extension.JavaMutableModuleExtension;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

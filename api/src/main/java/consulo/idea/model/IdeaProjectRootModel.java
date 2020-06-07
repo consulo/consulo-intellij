@@ -16,15 +16,17 @@
 
 package consulo.idea.model;
 
-import java.io.File;
-import java.io.IOException;
-
+import consulo.logging.Logger;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.xpath.XPath;
-import com.intellij.openapi.diagnostic.Logger;
+import org.jdom.filter.Filters;
+import org.jdom.xpath.XPathExpression;
+import org.jdom.xpath.XPathFactory;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -47,9 +49,9 @@ public class IdeaProjectRootModel extends IdeaPropertyHolderModel<IdeaProjectRoo
 
 			final Document document = ideaProjectModel.loadDocument(miscFile);
 
-			XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectRootManager']");
+			XPathExpression<Element> xpathExpression = XPathFactory.instance().compile("/project[@version='4']/component[@name='ProjectRootManager']", Filters.element());
 
-			final Element element = (Element) xpathExpression.selectSingleNode(document);
+			final Element element = xpathExpression.evaluateFirst(document);
 			if(element == null)
 			{
 				return;

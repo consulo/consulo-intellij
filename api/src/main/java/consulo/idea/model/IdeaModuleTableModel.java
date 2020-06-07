@@ -15,16 +15,18 @@
  */
 package consulo.idea.model;
 
+import com.intellij.openapi.diagnostic.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.filter.Filters;
+import org.jdom.xpath.XPathExpression;
+import org.jdom.xpath.XPathFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.xpath.XPath;
-import com.intellij.openapi.diagnostic.Logger;
 
 /**
  * @author VISTALL
@@ -49,10 +51,10 @@ public class IdeaModuleTableModel implements IdeaParseableModel
 
 			final Document document = ideaProjectModel.loadDocument(modulesFile);
 
-			XPath xpathExpression = XPath.newInstance("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*");
+			XPathExpression<Element> xpathExpression = XPathFactory.instance().compile("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*", Filters.element());
 
 			//noinspection unchecked
-			final List<Element> list = xpathExpression.selectNodes(document);
+			final List<Element> list = xpathExpression.evaluate(document);
 
 			for(Element element : list)
 			{

@@ -16,22 +16,22 @@
 
 package consulo.idea.util.projectWizard;
 
-import java.awt.BorderLayout;
-import java.util.Map;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.IdeBorderFactory;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.wizard.WizardStep;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 25.08.2015
  */
-public class IdeaModuleConfigurationStep extends ModuleWizardStep
+public class IdeaModuleConfigurationStep implements WizardStep<IdeaImportContext>
 {
 	private Map<String, IdeaModuleTypeConfigurationPanel> myMap;
 
@@ -40,8 +40,18 @@ public class IdeaModuleConfigurationStep extends ModuleWizardStep
 		myMap = map;
 	}
 
+	@RequiredUIAccess
+	@Nonnull
 	@Override
-	public JComponent getComponent()
+	public consulo.ui.Component getComponent()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@RequiredUIAccess
+	@Nonnull
+	@Override
+	public Component getSwingComponent()
 	{
 		JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
 		for(Map.Entry<String, IdeaModuleTypeConfigurationPanel> entry : myMap.entrySet())
@@ -53,10 +63,5 @@ public class IdeaModuleConfigurationStep extends ModuleWizardStep
 			panel.add(somePanel);
 		}
 		return panel;
-	}
-
-	@Override
-	public void updateDataModel()
-	{
 	}
 }

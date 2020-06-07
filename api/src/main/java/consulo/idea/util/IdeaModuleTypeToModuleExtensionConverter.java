@@ -17,9 +17,10 @@ package consulo.idea.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import com.intellij.openapi.roots.ModuleRootModel;
 import com.intellij.openapi.util.KeyedExtensionCollector;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.module.extension.ModuleExtensionProviderEP;
