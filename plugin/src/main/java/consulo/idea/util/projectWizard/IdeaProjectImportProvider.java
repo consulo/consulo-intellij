@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
 import consulo.idea.IdeaConstants;
-import consulo.idea.IdeaIcons;
+import consulo.idea.impl.icon.IdeaImplIconGroup;
 import consulo.idea.model.*;
 import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.ModuleIdeaOrderEntryModel;
@@ -73,7 +73,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 	@Override
 	public Image getIcon()
 	{
-		return IdeaIcons.Idea;
+		return IdeaImplIconGroup.idea();
 	}
 
 	@Override

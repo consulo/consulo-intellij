@@ -15,13 +15,13 @@
  */
 package consulo.idea.file;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
-import consulo.idea.IdeaIcons;
+import consulo.idea.impl.icon.IdeaImplIconGroup;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -57,7 +57,7 @@ public class IdeaModuleFileType implements FileType
 	@Override
 	public Image getIcon()
 	{
-		return IdeaIcons.Idea;
+		return IdeaImplIconGroup.idea();
 	}
 
 	@Nullable
