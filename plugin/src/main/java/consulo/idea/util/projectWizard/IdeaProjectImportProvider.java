@@ -26,7 +26,7 @@ import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.newProject.ui.ProjectOrModuleNameStep;
+import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
 import consulo.idea.IdeaConstants;
 import consulo.idea.impl.icon.IdeaImplIconGroup;
 import consulo.idea.model.*;
@@ -103,7 +103,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 	public void buildSteps(@Nonnull Consumer<WizardStep<IdeaImportContext>> consumer, @Nonnull IdeaImportContext context)
 	{
 		Map<String, IdeaModuleTypeConfigurationPanel> configuration = context.getConfiguration();
-		consumer.accept(new ProjectOrModuleNameStep<>(context));
+		consumer.accept(new UnifiedProjectOrModuleNameStep<>(context));
 
 		if(!configuration.isEmpty())
 		{

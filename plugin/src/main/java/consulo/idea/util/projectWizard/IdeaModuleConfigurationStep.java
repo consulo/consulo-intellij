@@ -18,6 +18,7 @@ package consulo.idea.util.projectWizard;
 
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.IdeBorderFactory;
+import consulo.disposer.Disposable;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.wizard.WizardStep;
@@ -43,7 +44,7 @@ public class IdeaModuleConfigurationStep implements WizardStep<IdeaImportContext
 	@RequiredUIAccess
 	@Nonnull
 	@Override
-	public consulo.ui.Component getComponent()
+	public consulo.ui.Component getComponent(@Nonnull Disposable uiDisposable)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -51,7 +52,7 @@ public class IdeaModuleConfigurationStep implements WizardStep<IdeaImportContext
 	@RequiredUIAccess
 	@Nonnull
 	@Override
-	public Component getSwingComponent()
+	public Component getSwingComponent(@Nonnull Disposable uiDisposable)
 	{
 		JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
 		for(Map.Entry<String, IdeaModuleTypeConfigurationPanel> entry : myMap.entrySet())
