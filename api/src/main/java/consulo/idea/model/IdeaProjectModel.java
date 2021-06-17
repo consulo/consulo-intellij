@@ -15,18 +15,17 @@
  */
 package consulo.idea.model;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
+import com.intellij.openapi.components.PathMacroMap;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.jdom.JDOMUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import com.intellij.openapi.components.PathMacroMap;
-import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author VISTALL
