@@ -13,10 +13,14 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<idea-plugin>
+<consulo-plugin>
 	<id>consulo.intellij</id>
 	<name>IntelliJ Project Importer</name>
 	<category>Import</category>
+	<version>SNAPSHOT</version>
+	<tags>
+		<tag>import</tag>
+	</tags>
 	<depends optional="true" config-file="consulo.java.xml">consulo.java</depends>
 	<depends optional="true" config-file="consulo.devkit.xml">consulo.devkit</depends>
 
@@ -31,4 +35,4 @@
 
 		<fileTypeFactory implementation="consulo.idea.file.IdeaModuleFileTypeFactory"/>
 	</extensions>
-</idea-plugin>
+</consulo-plugin>
