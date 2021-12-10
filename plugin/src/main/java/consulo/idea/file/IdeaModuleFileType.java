@@ -18,6 +18,7 @@ package consulo.idea.file;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.idea.impl.icon.IdeaImplIconGroup;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -41,9 +42,9 @@ public class IdeaModuleFileType implements FileType
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return "IntelliJ IDEA module files";
+		return LocalizeValue.localizeTODO("IntelliJ IDEA module files");
 	}
 
 	@Nonnull
@@ -53,7 +54,7 @@ public class IdeaModuleFileType implements FileType
 		return DEFAULT_EXTENSION;
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	public Image getIcon()
 	{
