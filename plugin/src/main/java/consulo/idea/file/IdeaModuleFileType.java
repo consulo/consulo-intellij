@@ -58,7 +58,7 @@ public class IdeaModuleFileType implements FileType
 	@Override
 	public Image getIcon()
 	{
-		return IdeaImplIconGroup.idea();
+		return IdeaImplIconGroup.ideaModule();
 	}
 
 	@Nullable
