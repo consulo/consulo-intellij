@@ -44,7 +44,7 @@ public class IdeaModuleConfigurationStep implements WizardStep<IdeaImportContext
 	@RequiredUIAccess
 	@Nonnull
 	@Override
-	public consulo.ui.Component getComponent(@Nonnull Disposable uiDisposable)
+	public consulo.ui.Component getComponent(@Nonnull IdeaImportContext context, @Nonnull Disposable uiDisposable)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -52,7 +52,7 @@ public class IdeaModuleConfigurationStep implements WizardStep<IdeaImportContext
 	@RequiredUIAccess
 	@Nonnull
 	@Override
-	public Component getSwingComponent(@Nonnull Disposable uiDisposable)
+	public Component getSwingComponent(@Nonnull IdeaImportContext context, @Nonnull Disposable uiDisposable)
 	{
 		JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
 		for(Map.Entry<String, IdeaModuleTypeConfigurationPanel> entry : myMap.entrySet())
