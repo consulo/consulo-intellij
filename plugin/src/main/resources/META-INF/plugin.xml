@@ -21,18 +21,6 @@
 	<tags>
 		<tag>import</tag>
 	</tags>
-	<depends optional="true" config-file="consulo.java.xml">consulo.java</depends>
-	<depends optional="true" config-file="consulo.devkit.xml">consulo.devkit</depends>
-
-	<extensionPoints>
-		<extensionPoint name="moduleTypeToModuleExtensionConverter" beanClass="com.intellij.util.KeyedLazyInstanceEP">
-			<with attribute="implementationClass" implements="consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter"/>
-		</extensionPoint>
-	</extensionPoints>
-
-	<extensions defaultExtensionNs="com.intellij">
-		<moduleImportProvider implementation="consulo.idea.util.projectWizard.IdeaProjectImportProvider"/>
-
-		<fileTypeFactory implementation="consulo.idea.file.IdeaModuleFileTypeFactory"/>
-	</extensions>
+	<depends optional="true">consulo.java</depends>
+	<depends optional="true">consulo.devkit</depends>
 </consulo-plugin>

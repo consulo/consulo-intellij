@@ -15,10 +15,9 @@
  */
 package consulo.idea.model;
 
-import com.intellij.openapi.components.PathMacroMap;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.component.macro.PathMacroMap;
 import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.StringUtil;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -26,6 +25,7 @@ import org.jdom.JDOMException;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * @author VISTALL
@@ -50,7 +50,7 @@ public class IdeaProjectModel extends IdeaInstanceHolderModel implements IdeaPar
 		{
 			try
 			{
-				myName = FileUtil.loadFile(nameFile);
+				myName = Files.readString(nameFile.toPath());
 			}
 			catch(IOException ignored)
 			{

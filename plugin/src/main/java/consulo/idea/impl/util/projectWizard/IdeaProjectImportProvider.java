@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.idea.util.projectWizard;
+package consulo.idea.impl.util.projectWizard;
 
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
-import consulo.idea.IdeaConstants;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.WriteAction;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.content.base.GeneratedContentFolderPropertyProvider;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.ide.moduleImport.ModuleImportProvider;
+import consulo.ide.newModule.ui.UnifiedProjectOrModuleNameStep;
+import consulo.idea.impl.IdeaConstants;
 import consulo.idea.impl.icon.IdeaImplIconGroup;
 import consulo.idea.model.*;
 import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
@@ -36,17 +33,26 @@ import consulo.idea.model.orderEnties.ModuleLibraryIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.ProjectLibraryIdeaOrderEntryModel;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.content.TestResourceContentFolderTypeProvider;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ContentFolder;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.orderEntry.ExportableOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import consulo.moduleImport.ModuleImportProvider;
-import consulo.roots.ContentFolderTypeProvider;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
-import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
-import consulo.roots.impl.TestContentFolderTypeProvider;
-import consulo.roots.impl.TestResourceContentFolderTypeProvider;
-import consulo.roots.impl.property.GeneratedContentFolderPropertyProvider;
+import consulo.project.Project;
+import consulo.project.content.library.ProjectLibraryTable;
+import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.image.Image;
-import consulo.ui.wizard.WizardStep;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,6 +66,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 18:48/14.06.13
  */
+@ExtensionImpl
 public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImportContext>
 {
 	@Nonnull
@@ -136,7 +143,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 			String modulePath = null;
 			if(!contentEntries.isEmpty())
 			{
-				modulePath = VfsUtil.urlToPath(contentEntries.get(0).getUrl());
+				modulePath = VirtualFileUtil.urlToPath(contentEntries.get(0).getUrl());
 			}
 
 			Module module = newModel.newModule(nameWithoutExtension, modulePath);
@@ -216,7 +223,7 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
 			IdeaModuleTypeConfigurationPanel ideaModuleTypeConfigurationPanel = map.get(moduleType);
 			if(ideaModuleTypeConfigurationPanel != null)
 			{
-				IdeaModuleTypeToModuleExtensionConverter converter = IdeaModuleTypeToModuleExtensionConverter.EP.findSingle(moduleType);
+				IdeaModuleTypeToModuleExtensionConverter converter = IdeaModuleTypeToModuleExtensionConverter.find(moduleType);
 				assert converter != null;
 				//noinspection unchecked
 				converter.convertTypeToExtension(modifiableModel, ideaModuleModel, ideaModuleTypeConfigurationPanel);

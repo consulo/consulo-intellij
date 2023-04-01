@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.idea.file;
+package consulo.idea.impl.file;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
 import consulo.idea.impl.icon.IdeaImplIconGroup;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,7 +58,7 @@ public class IdeaModuleFileType implements FileType
 	@Override
 	public Image getIcon()
 	{
-		return IdeaImplIconGroup.ideaModule();
+		return IdeaImplIconGroup.ideamodule();
 	}
 
 	@Nullable

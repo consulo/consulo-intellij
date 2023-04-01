@@ -15,11 +15,11 @@
  */
 package consulo.idea.model;
 
-import javax.annotation.Nonnull;
-
+import consulo.util.collection.LinkedMultiMap;
+import consulo.util.collection.MultiMap;
 import org.jdom.Element;
-import com.intellij.util.containers.LinkedMultiMap;
-import com.intellij.util.containers.MultiMap;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

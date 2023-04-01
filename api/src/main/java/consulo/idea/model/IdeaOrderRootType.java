@@ -16,12 +16,12 @@
 
 package consulo.idea.model;
 
-import javax.annotation.Nonnull;
+import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.DocumentationOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 
-import com.intellij.openapi.roots.OrderRootType;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.DocumentationOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

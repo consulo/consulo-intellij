@@ -15,17 +15,17 @@
  */
 package consulo.idea.model;
 
+import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtilRt;
 
 /**
  * @author VISTALL
@@ -48,7 +48,7 @@ public class IdeaProjectLibraryTableModel extends IdeaLibraryTableModel implemen
 				return;
 			}
 
-			final FilenameFilter filter = (dir, name) -> FileUtilRt.getExtension(name).equalsIgnoreCase("xml");
+			final FilenameFilter filter = (dir, name) -> FileUtil.getExtension(name).equalsIgnoreCase("xml");
 
 			for(File child : file.listFiles(filter))
 			{

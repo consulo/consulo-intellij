@@ -13,42 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.idea.util.impl;
+package consulo.idea.impl.java;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.pom.java.LanguageLevel;
+import com.intellij.java.language.LanguageLevel;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.devkit.module.extension.PluginMutableModuleExtension;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.model.orderEnties.IdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.InheritedIdeaOrderEntryModel;
 import consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
-import consulo.java.module.extension.JavaMutableModuleExtension;
+import consulo.java.language.module.extension.JavaMutableModuleExtension;
+import consulo.module.content.layer.ModuleRootModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 16:29/15.06.13
+ * @since 16:27/15.06.13
  */
-public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTypeToModuleExtensionConverter<PluginConfigurationPanel>
+@ExtensionImpl
+public class JavaIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTypeToModuleExtensionConverter<JavaConfigurationPanel>
 {
-	@Nullable
+	@Nonnull
 	@Override
-	public PluginConfigurationPanel createConfigurationPanel(@Nonnull IdeaProjectModel ideaProjectModel, @Nonnull IdeaModuleModel ideaModuleModel)
+	public String getModuleType()
 	{
-		return new PluginConfigurationPanel(ideaProjectModel);
+		return "JAVA_MODULE";
+	}
+
+	@Override
+	public JavaConfigurationPanel createConfigurationPanel(@Nonnull IdeaProjectModel ideaProjectModel, @Nonnull IdeaModuleModel ideaModuleModel)
+	{
+		return new JavaConfigurationPanel(ideaProjectModel);
 	}
 
 	@RequiredReadAction
 	@Override
-	public void convertTypeToExtension(@Nonnull ModuleRootModel moduleRootModel, @Nonnull IdeaModuleModel ideaModuleModel, @Nullable PluginConfigurationPanel pluginConfigurationPanel)
+	public void convertTypeToExtension(@Nonnull ModuleRootModel moduleRootModel, @Nonnull IdeaModuleModel ideaModuleModel, @Nullable JavaConfigurationPanel javaConfigurationPanel)
 	{
-		assert pluginConfigurationPanel != null;
+		assert javaConfigurationPanel != null;
 
 		JavaMutableModuleExtension<?> moduleExtension = enableExtensionById("java", moduleRootModel);
 		assert moduleExtension != null;
@@ -57,7 +63,7 @@ public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTy
 		{
 			if(ideaOrderEntryModel instanceof InheritedIdeaOrderEntryModel)
 			{
-				moduleExtension.getInheritableSdk().set(null, pluginConfigurationPanel.getSdkComboBox().getSelectedSdkName());
+				moduleExtension.getInheritableSdk().set(null, javaConfigurationPanel.getSdkComboBox().getSelectedSdkName());
 			}
 			else if(ideaOrderEntryModel instanceof JdkSourceIdeaOrderEntryModel)
 			{
@@ -80,16 +86,7 @@ public class PluginIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTy
 		}
 		else
 		{
-			moduleExtension.getInheritableLanguageLevel().set(null, (LanguageLevel) pluginConfigurationPanel.getLanguageLevelBox().getSelectedItem());
-		}
-
-		PluginMutableModuleExtension pluginExtension = enableExtensionById("consulo-plugin", moduleRootModel);
-		assert pluginExtension != null;
-
-		Sdk selectedSdk = pluginConfigurationPanel.getPluginSdkComboBox().getSelectedSdk();
-		if(selectedSdk != null)
-		{
-			pluginExtension.getInheritableSdk().set(null, selectedSdk);
+			moduleExtension.getInheritableLanguageLevel().set(null, (LanguageLevel) javaConfigurationPanel.getLanguageLevelBox().getSelectedItem());
 		}
 	}
 }

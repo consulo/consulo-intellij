@@ -15,11 +15,8 @@
  */
 package consulo.idea.model;
 
-import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.intellij.util.ReflectionUtil;
 
 /**
  * @author VISTALL
@@ -27,17 +24,23 @@ import com.intellij.util.ReflectionUtil;
  */
 public class IdeaInstanceHolderModel
 {
-	protected Map<Class, Object> myInstances = new LinkedHashMap<Class, Object>();
+	protected Map<Class, Object> myInstances = new LinkedHashMap<>();
 
-	@SuppressWarnings("unchecked")
+	// skip deprecation - in future version method will not be deprecated
+	@SuppressWarnings({"unchecked", "deprecation"})
 	public <T> T getInstance(Class<T> clazz)
 	{
-		Object o = myInstances.get(clazz);
-		if(o == null)
+		return (T) myInstances.computeIfAbsent(clazz, aClass ->
 		{
-			final Constructor<T> defaultConstructor = ReflectionUtil.getDefaultConstructor(clazz);
-			myInstances.put(clazz, o = ReflectionUtil.createInstance(defaultConstructor));
-		}
-		return (T) o;
+			try
+			{
+				return aClass.newInstance();
+			}
+			catch(InstantiationException | IllegalAccessException e)
+			{
+				throw new RuntimeException(e);
+			}
+
+		});
 	}
 }

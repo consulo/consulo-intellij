@@ -15,25 +15,39 @@
  */
 package consulo.idea.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.util.KeyedExtensionCollector;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaProjectModel;
-import consulo.module.extension.ModuleExtensionProviderEP;
+import consulo.module.content.layer.ModuleExtensionProvider;
+import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.extension.MutableModuleExtension;
-import consulo.module.extension.impl.ModuleExtensionProviders;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 16:25/15.06.13
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class IdeaModuleTypeToModuleExtensionConverter<T extends IdeaModuleTypeConfigurationPanel>
 {
-	public static final KeyedExtensionCollector<IdeaModuleTypeToModuleExtensionConverter, String> EP = new KeyedExtensionCollector<>("consulo.intellij.moduleTypeToModuleExtensionConverter");
+	private static final ExtensionPointCacheKey<IdeaModuleTypeToModuleExtensionConverter, Map<String, IdeaModuleTypeToModuleExtensionConverter>> CACHE_KEY =
+			ExtensionPointCacheKey.groupBy("IdeaModuleTypeToModuleExtensionConverter", IdeaModuleTypeToModuleExtensionConverter::getModuleType);
+
+	@Nullable
+	public static IdeaModuleTypeToModuleExtensionConverter find(String moduleType)
+	{
+		return Application.get().getExtensionPoint(IdeaModuleTypeToModuleExtensionConverter.class).getOrBuildCache(CACHE_KEY).get(moduleType);
+	}
+
+	@Nonnull
+	public abstract String getModuleType();
 
 	@Nullable
 	public T createConfigurationPanel(@Nonnull IdeaProjectModel ideaProjectModel, @Nonnull IdeaModuleModel ideaModuleModel)
@@ -47,7 +61,7 @@ public abstract class IdeaModuleTypeToModuleExtensionConverter<T extends IdeaMod
 	@SuppressWarnings("unchecked")
 	protected static <K extends MutableModuleExtension<?>> K enableExtensionById(@Nonnull String id, @Nonnull ModuleRootModel rootModel)
 	{
-		ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(id);
+		ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(id);
 		if(provider == null)
 		{
 			return null;

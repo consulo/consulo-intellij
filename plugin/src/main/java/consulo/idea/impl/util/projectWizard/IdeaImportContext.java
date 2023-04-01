@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package consulo.idea.util.projectWizard;
+package consulo.idea.impl.util.projectWizard;
 
-import com.intellij.openapi.project.Project;
-import consulo.idea.IdeaConstants;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.idea.impl.IdeaConstants;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaModuleTableModel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
-import consulo.moduleImport.ModuleImportContext;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -83,9 +83,9 @@ public class IdeaImportContext extends ModuleImportContext
 		for(IdeaModuleModel ideaModuleModel : ideaModuleModels)
 		{
 			String moduleType = ideaModuleModel.getModuleType();
-			IdeaModuleTypeToModuleExtensionConverter instance = IdeaModuleTypeToModuleExtensionConverter.EP.findSingle(moduleType);
+			IdeaModuleTypeToModuleExtensionConverter instance = IdeaModuleTypeToModuleExtensionConverter.find(moduleType);
 
-			IdeaModuleTypeConfigurationPanel configurationPanel = instance.createConfigurationPanel(myIdeaProjectModel, ideaModuleModel);
+			IdeaModuleTypeConfigurationPanel configurationPanel = instance == null ? null : instance.createConfigurationPanel(myIdeaProjectModel, ideaModuleModel);
 			if(configurationPanel != null)
 			{
 				map.put(moduleType, configurationPanel);

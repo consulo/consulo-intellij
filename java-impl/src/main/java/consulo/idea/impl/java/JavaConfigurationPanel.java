@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package consulo.idea.util.impl;
+package consulo.idea.impl.java;
 
-import com.intellij.openapi.projectRoots.JavaSdk;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.pom.java.LanguageLevel;
-import com.intellij.ui.ColoredListCellRendererWrapper;
-import com.intellij.util.ui.JBUI;
-import consulo.desktop.util.awt.component.VerticalLayoutPanel;
+import com.intellij.java.language.LanguageLevel;
+import com.intellij.java.language.projectRoots.JavaSdk;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkModel;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.model.IdeaProjectRootModel;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
-import consulo.roots.ui.configuration.SdkComboBox;
+import consulo.module.ui.awt.SdkComboBox;
+import consulo.ui.ex.awt.*;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -52,8 +49,7 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 	@Override
 	public JComponent getComponent()
 	{
-		DefaultSdksModel model = new DefaultSdksModel();
-		model.reset();
+		SdkModel model = ShowSettingsUtil.getInstance().getSdksModel();
 
 		mySdkComboBox = new SdkComboBox(model, sdkTypeId -> sdkTypeId == JavaSdk.getInstance(), true);
 
@@ -75,10 +71,10 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 
 		myLanguageLevelBox = new ComboBox<>(LanguageLevel.values());
 		myLanguageLevelBox.setSelectedItem(LanguageLevel.HIGHEST);
-		myLanguageLevelBox.setRenderer(new ColoredListCellRendererWrapper<LanguageLevel>()
+		myLanguageLevelBox.setRenderer(new ColoredListCellRenderer<LanguageLevel>()
 		{
 			@Override
-			protected void doCustomize(JList list, LanguageLevel value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(@Nonnull JList jList, LanguageLevel value, int i, boolean b, boolean b1)
 			{
 				append(value.getShortText());
 			}
@@ -105,7 +101,7 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 		return verticalLayoutPanel;
 	}
 
-	protected void addOtherComponents(VerticalLayoutPanel panel, DefaultSdksModel projectSdksModel)
+	protected void addOtherComponents(VerticalLayoutPanel panel, SdkModel projectSdksModel)
 	{
 	}
 

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.idea.util.impl;
+package consulo.idea.impl.devkit;
 
-import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
-import com.intellij.openapi.ui.LabeledComponent;
-import consulo.desktop.util.awt.component.VerticalLayoutPanel;
+import consulo.content.bundle.SdkModel;
+import consulo.idea.impl.java.JavaConfigurationPanel;
 import consulo.idea.model.IdeaProjectModel;
-import consulo.roots.ui.configuration.SdkComboBox;
+import consulo.module.ui.awt.SdkComboBox;
+import consulo.ui.ex.awt.LabeledComponent;
+import consulo.ui.ex.awt.VerticalLayoutPanel;
 import org.jetbrains.idea.devkit.sdk.ConsuloSdkType;
 
 /**
@@ -37,7 +38,7 @@ public class PluginConfigurationPanel extends JavaConfigurationPanel
 	}
 
 	@Override
-	protected void addOtherComponents(VerticalLayoutPanel panel, DefaultSdksModel model)
+	protected void addOtherComponents(VerticalLayoutPanel panel, SdkModel model)
 	{
 		myPluginSdkComboBox = new SdkComboBox(model, sdkTypeId -> sdkTypeId == ConsuloSdkType.getInstance(), true);
 		panel.addComponent(LabeledComponent.create(myPluginSdkComboBox, "IntelliJ Project SDK"));

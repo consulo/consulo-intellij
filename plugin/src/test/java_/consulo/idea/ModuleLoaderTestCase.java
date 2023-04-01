@@ -17,6 +17,7 @@ package consulo.idea;
 
 import java.io.File;
 
+import consulo.idea.impl.IdeaConstants;
 import consulo.idea.model.IdeaProjectModel;
 import junit.framework.TestCase;
 

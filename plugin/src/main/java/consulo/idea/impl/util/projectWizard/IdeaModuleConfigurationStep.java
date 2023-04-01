@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.idea.util.projectWizard;
+package consulo.idea.impl.util.projectWizard;
 
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.ui.IdeBorderFactory;
 import consulo.disposer.Disposable;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.wizard.WizardStep;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
