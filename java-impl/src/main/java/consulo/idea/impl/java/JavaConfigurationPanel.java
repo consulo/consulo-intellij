@@ -76,7 +76,7 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 			@Override
 			protected void customizeCellRenderer(@Nonnull JList jList, LanguageLevel value, int i, boolean b, boolean b1)
 			{
-				append(value.getShortText());
+				append(value.getDescription().get());
 			}
 		});
 
