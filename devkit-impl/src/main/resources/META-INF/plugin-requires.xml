@@ -1,6 +1,0 @@
-<consulo-plugin-requires>
-	<plugins>
-		<plugin>consulo.java</plugin>
-		<plugin>consulo.devkit</plugin>
-	</plugins>
-</consulo-plugin-requires>

@@ -45,6 +45,5 @@
 		<module>api</module>
 		<module>plugin</module>
 		<module>java-impl</module>
-		<module>devkit-impl</module>
 	</modules>
 </project>
