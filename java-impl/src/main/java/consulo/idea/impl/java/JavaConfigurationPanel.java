@@ -17,7 +17,7 @@
 package consulo.idea.impl.java;
 
 import com.intellij.java.language.LanguageLevel;
-import com.intellij.java.language.projectRoots.JavaSdk;
+import com.intellij.java.language.projectRoots.JavaSdkType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -51,7 +51,7 @@ public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
 	{
 		SdkModel model = ShowSettingsUtil.getInstance().getSdksModel();
 
-		mySdkComboBox = new SdkComboBox(model, sdkTypeId -> sdkTypeId == JavaSdk.getInstance(), true);
+		mySdkComboBox = new SdkComboBox(model, it -> it instanceof JavaSdkType, true);
 
 		IdeaProjectRootModel projectRootModel = myIdeaProjectModel.getInstance(IdeaProjectRootModel.class);
 
