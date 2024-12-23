@@ -19,7 +19,7 @@
 	<category>Import</category>
 	<version>SNAPSHOT</version>
 	<tags>
-		<tag>tag corrected</tag>
+		<tag>project.import</tag>
 	</tags>
 	<depends optional="true">consulo.java</depends>
 </consulo-plugin>
