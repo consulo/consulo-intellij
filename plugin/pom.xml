@@ -50,7 +50,6 @@
 				<configuration>
 					<dependencies>
 						<dependency>consulo.java</dependency>
-						<dependency>consulo.devkit</dependency>
 						<dependency>com.intellij.xml</dependency>
 						<dependency>com.intellij.properties</dependency>
 						<dependency>com.intellij.uiDesigner</dependency>
@@ -85,12 +84,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>consulo.intellij-api</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.intellij-devkit.impl</artifactId>
-			<version>${project.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

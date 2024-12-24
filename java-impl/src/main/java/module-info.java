@@ -9,6 +9,4 @@ module consulo.intellij.java.impl
 
 	// TODO remove in future
 	requires java.desktop;
-
-	exports consulo.idea.impl.java to consulo.intellij.devkit.impl;
 }
