@@ -18,7 +18,7 @@ package consulo.idea.util;
 
 import javax.swing.JComponent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author VISTALL

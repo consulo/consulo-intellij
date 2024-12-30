@@ -19,7 +19,7 @@ import consulo.util.collection.LinkedMultiMap;
 import consulo.util.collection.MultiMap;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

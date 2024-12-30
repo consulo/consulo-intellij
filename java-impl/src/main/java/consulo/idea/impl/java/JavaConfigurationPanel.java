@@ -27,7 +27,7 @@ import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.module.ui.awt.SdkComboBox;
 import consulo.ui.ex.awt.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

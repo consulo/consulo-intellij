@@ -25,8 +25,8 @@ import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;

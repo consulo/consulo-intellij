@@ -26,8 +26,8 @@ import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.extension.MutableModuleExtension;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

@@ -27,8 +27,8 @@ import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import consulo.java.language.module.extension.JavaMutableModuleExtension;
 import consulo.module.content.layer.ModuleRootModel;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

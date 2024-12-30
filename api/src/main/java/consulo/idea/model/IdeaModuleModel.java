@@ -24,7 +24,7 @@ import org.jdom.filter.Filters;
 import org.jdom.xpath.XPathExpression;
 import org.jdom.xpath.XPathFactory;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
