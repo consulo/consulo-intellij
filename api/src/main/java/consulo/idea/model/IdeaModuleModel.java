@@ -17,6 +17,7 @@ package consulo.idea.model;
 
 import consulo.idea.model.orderEnties.*;
 import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
 import jakarta.annotation.Nonnull;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -34,10 +35,10 @@ import java.util.List;
  * @since 9:57/16.06.13
  */
 public class IdeaModuleModel extends IdeaPropertyHolderModel<IdeaModuleModel> implements IdeaParseableModel {
-    private static final Logger LOGGER = Logger.getInstance(IdeaModuleModel.class);
+    private static final Logger LOG = Logger.getInstance(IdeaModuleModel.class);
 
-    private final List<IdeaContentEntryModel> myContentEntries = new ArrayList<IdeaContentEntryModel>();
-    private final List<IdeaOrderEntryModel> myOrderEntries = new ArrayList<IdeaOrderEntryModel>();
+    private final List<IdeaContentEntryModel> myContentEntries = new ArrayList<>();
+    private final List<IdeaOrderEntryModel> myOrderEntries = new ArrayList<>();
     private final File myFilePath;
     private final String myGroup;
     private String myModuleType;
@@ -61,7 +62,15 @@ public class IdeaModuleModel extends IdeaPropertyHolderModel<IdeaModuleModel> im
             File moduleFile = myFilePath;
             Document document = ideaProjectModel.loadDocument(moduleFile);
 
-            IdeaProjectModel.expand("$MODULE_DIR$", moduleFile.getParentFile().getAbsolutePath(), document.getRootElement());
+            String moduleDir;
+            // in case iml file inside .idea dir - moduleDir is projectDir
+            if (FileUtil.isAncestor(ideaProjectDir, moduleFile, false)) {
+                moduleDir = ideaProjectDir.getParentFile().getAbsolutePath();
+            }  else {
+                moduleDir = moduleFile.getParentFile().getAbsolutePath();
+            }
+
+            IdeaProjectModel.expand("$MODULE_DIR$", moduleDir, document.getRootElement());
 
             myModuleType = document.getRootElement().getAttributeValue("type");
             XPathExpression<Element> xPathExpression = XPathFactory.instance().compile("/module[@version='4']/component[@name='NewModuleRootManager']", Filters.element());
@@ -130,7 +139,7 @@ public class IdeaModuleModel extends IdeaPropertyHolderModel<IdeaModuleModel> im
             }
         }
         catch (Exception e) {
-            LOGGER.error(e);
+            LOG.error(e);
         }
     }
 

@@ -52,7 +52,6 @@
 						<dependency>consulo.java</dependency>
 						<dependency>com.intellij.xml</dependency>
 						<dependency>com.intellij.properties</dependency>
-						<dependency>com.intellij.uiDesigner</dependency>
 					</dependencies>
 					<packaging>
 						<skip>${dev.mode}</skip>
