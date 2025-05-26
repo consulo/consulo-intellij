@@ -18,9 +18,8 @@ package consulo.idea.model.orderEnties;
 /**
  * @author VISTALL
  * @since 10:13/16.06.13
- *        <p/>
- *        sourceFolder
+ * <p/>
+ * sourceFolder
  */
-public class ModuleSourceIdeaOrderEntryModel extends IdeaOrderEntryModel
-{
+public class ModuleSourceIdeaOrderEntryModel extends IdeaOrderEntryModel {
 }

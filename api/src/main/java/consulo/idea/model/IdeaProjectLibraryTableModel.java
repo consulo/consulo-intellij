@@ -31,51 +31,42 @@ import java.util.List;
  * @author VISTALL
  * @since 9:49/16.06.13
  */
-public class IdeaProjectLibraryTableModel extends IdeaLibraryTableModel implements IdeaParseableModel
-{
-	private static final Logger LOGGER = Logger.getInstance(IdeaProjectLibraryTableModel.class);
+public class IdeaProjectLibraryTableModel extends IdeaLibraryTableModel implements IdeaParseableModel {
+    private static final Logger LOGGER = Logger.getInstance(IdeaProjectLibraryTableModel.class);
 
-	private final List<IdeaLibraryModel> myLibraries = new ArrayList<IdeaLibraryModel>();
+    private final List<IdeaLibraryModel> myLibraries = new ArrayList<IdeaLibraryModel>();
 
-	@Override
-	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
-	{
-		try
-		{
-			File file = new File(ideaProjectDir, "libraries");
-			if(!file.exists())
-			{
-				return;
-			}
+    @Override
+    public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir) {
+        try {
+            File file = new File(ideaProjectDir, "libraries");
+            if (!file.exists()) {
+                return;
+            }
 
-			final FilenameFilter filter = (dir, name) -> FileUtil.getExtension(name).equalsIgnoreCase("xml");
+            final FilenameFilter filter = (dir, name) -> FileUtil.getExtension(name).equalsIgnoreCase("xml");
 
-			for(File child : file.listFiles(filter))
-			{
-				final Document document = ideaProjectModel.loadDocument(child);
+            for (File child : file.listFiles(filter)) {
+                final Document document = ideaProjectModel.loadDocument(child);
 
-				final Element rootElement = document.getRootElement();
-				final String attributeValue = rootElement.getAttributeValue("name");
-				if("libraryTable".equals(attributeValue))
-				{
-					final Element libraryElement = rootElement.getChild("library");
-					if(libraryElement != null)
-					{
-						IdeaLibraryModel libraryModel = new IdeaLibraryModel();
-						libraryModel.load(ideaProjectModel, rootElement);
-						myLibraries.add(libraryModel);
-					}
-				}
-			}
-		}
-		catch(JDOMException | IOException e)
-		{
-			LOGGER.error(e);
-		}
-	}
+                final Element rootElement = document.getRootElement();
+                final String attributeValue = rootElement.getAttributeValue("name");
+                if ("libraryTable".equals(attributeValue)) {
+                    final Element libraryElement = rootElement.getChild("library");
+                    if (libraryElement != null) {
+                        IdeaLibraryModel libraryModel = new IdeaLibraryModel();
+                        libraryModel.load(ideaProjectModel, rootElement);
+                        myLibraries.add(libraryModel);
+                    }
+                }
+            }
+        }
+        catch (JDOMException | IOException e) {
+            LOGGER.error(e);
+        }
+    }
 
-	public List<IdeaLibraryModel> getLibraries()
-	{
-		return myLibraries;
-	}
+    public List<IdeaLibraryModel> getLibraries() {
+        return myLibraries;
+    }
 }

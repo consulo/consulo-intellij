@@ -15,22 +15,20 @@
  */
 package consulo.idea.model;
 
+import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 10:07/16.06.13
  */
-public abstract class IdeaLibraryTableModel
-{
-	private final List<IdeaLibraryModel> myModels = new ArrayList<IdeaLibraryModel>();
+public abstract class IdeaLibraryTableModel {
+    private final List<IdeaLibraryModel> myModels = new ArrayList<IdeaLibraryModel>();
 
-	@Nonnull
-	public List<IdeaLibraryModel> getModels()
-	{
-		return myModels;
-	}
+    @Nonnull
+    public List<IdeaLibraryModel> getModels() {
+        return myModels;
+    }
 }

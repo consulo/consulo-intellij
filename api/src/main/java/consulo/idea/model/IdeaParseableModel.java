@@ -21,7 +21,6 @@ import java.io.File;
  * @author VISTALL
  * @since 9:54/16.06.13
  */
-public interface IdeaParseableModel
-{
-	void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir);
+public interface IdeaParseableModel {
+    void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir);
 }

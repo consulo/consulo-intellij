@@ -19,17 +19,14 @@ package consulo.idea.model.orderEnties;
  * @author VISTALL
  * @since 10:20/16.06.13
  */
-public class JdkSourceIdeaOrderEntryModel extends IdeaOrderEntryModel
-{
-	private final String myJdkName;
+public class JdkSourceIdeaOrderEntryModel extends IdeaOrderEntryModel {
+    private final String myJdkName;
 
-	public JdkSourceIdeaOrderEntryModel(String jdkName)
-	{
-		myJdkName = jdkName;
-	}
+    public JdkSourceIdeaOrderEntryModel(String jdkName) {
+        myJdkName = jdkName;
+    }
 
-	public String getJdkName()
-	{
-		return myJdkName;
-	}
+    public String getJdkName() {
+        return myJdkName;
+    }
 }

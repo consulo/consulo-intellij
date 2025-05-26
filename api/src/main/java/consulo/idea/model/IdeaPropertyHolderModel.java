@@ -16,40 +16,35 @@
 
 package consulo.idea.model;
 
+import jakarta.annotation.Nonnull;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 25.08.2015
  */
-public abstract class IdeaPropertyHolderModel<T extends IdeaPropertyHolderModel<T>>
-{
-	private Map<String, String> myProperties = new HashMap<String, String>();
+public abstract class IdeaPropertyHolderModel<T extends IdeaPropertyHolderModel<T>> {
+    private Map<String, String> myProperties = new HashMap<String, String>();
 
-	@Nonnull
-	@SuppressWarnings("unchecked")
-	public T addProperty(String name, String value)
-	{
-		myProperties.put(name, value);
-		return (T) this;
-	}
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public T addProperty(String name, String value) {
+        myProperties.put(name, value);
+        return (T) this;
+    }
 
-	public Map<String, String> getProperties()
-	{
-		return myProperties;
-	}
+    public Map<String, String> getProperties() {
+        return myProperties;
+    }
 
-	public boolean getBoolProperty(String name)
-	{
-		String property = getProperty(name);
-		return property != null && Boolean.parseBoolean(property);
-	}
+    public boolean getBoolProperty(String name) {
+        String property = getProperty(name);
+        return property != null && Boolean.parseBoolean(property);
+    }
 
-	public String getProperty(String name)
-	{
-		return myProperties.get(name);
-	}
+    public String getProperty(String name) {
+        return myProperties.get(name);
+    }
 }

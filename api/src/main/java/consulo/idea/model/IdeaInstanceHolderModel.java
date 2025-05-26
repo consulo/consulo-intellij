@@ -22,25 +22,21 @@ import java.util.Map;
  * @author VISTALL
  * @since 10:09/16.06.13
  */
-public class IdeaInstanceHolderModel
-{
-	protected Map<Class, Object> myInstances = new LinkedHashMap<>();
+public class IdeaInstanceHolderModel {
+    protected Map<Class, Object> myInstances = new LinkedHashMap<>();
 
-	// skip deprecation - in future version method will not be deprecated
-	@SuppressWarnings({"unchecked", "deprecation"})
-	public <T> T getInstance(Class<T> clazz)
-	{
-		return (T) myInstances.computeIfAbsent(clazz, aClass ->
-		{
-			try
-			{
-				return aClass.newInstance();
-			}
-			catch(InstantiationException | IllegalAccessException e)
-			{
-				throw new RuntimeException(e);
-			}
+    // skip deprecation - in future version method will not be deprecated
+    @SuppressWarnings({"unchecked", "deprecation"})
+    public <T> T getInstance(Class<T> clazz) {
+        return (T) myInstances.computeIfAbsent(clazz, aClass ->
+        {
+            try {
+                return aClass.newInstance();
+            }
+            catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
 
-		});
-	}
+        });
+    }
 }

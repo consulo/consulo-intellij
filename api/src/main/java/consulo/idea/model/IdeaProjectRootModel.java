@@ -32,40 +32,33 @@ import java.io.IOException;
  * @author VISTALL
  * @since 25.08.2015
  */
-public class IdeaProjectRootModel extends IdeaPropertyHolderModel<IdeaProjectRootModel> implements IdeaParseableModel
-{
-	private static final Logger LOGGER = Logger.getInstance(IdeaProjectRootModel.class);
+public class IdeaProjectRootModel extends IdeaPropertyHolderModel<IdeaProjectRootModel> implements IdeaParseableModel {
+    private static final Logger LOGGER = Logger.getInstance(IdeaProjectRootModel.class);
 
-	@Override
-	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
-	{
-		try
-		{
-			File miscFile = new File(ideaProjectDir, "misc.xml");
-			if(!miscFile.exists())
-			{
-				return;
-			}
+    @Override
+    public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir) {
+        try {
+            File miscFile = new File(ideaProjectDir, "misc.xml");
+            if (!miscFile.exists()) {
+                return;
+            }
 
-			final Document document = ideaProjectModel.loadDocument(miscFile);
+            final Document document = ideaProjectModel.loadDocument(miscFile);
 
-			XPathExpression<Element> xpathExpression = XPathFactory.instance().compile("/project[@version='4']/component[@name='ProjectRootManager']", Filters.element());
+            XPathExpression<Element> xpathExpression = XPathFactory.instance().compile("/project[@version='4']/component[@name='ProjectRootManager']", Filters.element());
 
-			final Element element = xpathExpression.evaluateFirst(document);
-			if(element == null)
-			{
-				return;
-			}
+            final Element element = xpathExpression.evaluateFirst(document);
+            if (element == null) {
+                return;
+            }
 
-			for(Attribute attribute : element.getAttributes())
-			{
-				addProperty(attribute.getName(), attribute.getValue());
-			}
-		}
-		catch(JDOMException | IOException e)
-		{
-			LOGGER.error(e);
-		}
-	}
+            for (Attribute attribute : element.getAttributes()) {
+                addProperty(attribute.getName(), attribute.getValue());
+            }
+        }
+        catch (JDOMException | IOException e) {
+            LOGGER.error(e);
+        }
+    }
 
 }

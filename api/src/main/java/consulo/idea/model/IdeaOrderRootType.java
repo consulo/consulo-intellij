@@ -20,43 +20,35 @@ import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 25.08.2015
  */
-public enum IdeaOrderRootType
-{
-	CLASSES
-			{
-				@Nonnull
-				@Override
-				public OrderRootType getOrderRootType()
-				{
-					return BinariesOrderRootType.getInstance();
-				}
-			},
-	DOCUMENTATION
-			{
-				@Nonnull
-				@Override
-				public OrderRootType getOrderRootType()
-				{
-					return DocumentationOrderRootType.getInstance();
-				}
-			},
-	SOURCES
-			{
-				@Nonnull
-				@Override
-				public OrderRootType getOrderRootType()
-				{
-					return SourcesOrderRootType.getInstance();
-				}
-			};
+public enum IdeaOrderRootType {
+    CLASSES {
+        @Nonnull
+        @Override
+        public OrderRootType getOrderRootType() {
+            return BinariesOrderRootType.getInstance();
+        }
+    },
+    DOCUMENTATION {
+        @Nonnull
+        @Override
+        public OrderRootType getOrderRootType() {
+            return DocumentationOrderRootType.getInstance();
+        }
+    },
+    SOURCES {
+        @Nonnull
+        @Override
+        public OrderRootType getOrderRootType() {
+            return SourcesOrderRootType.getInstance();
+        }
+    };
 
-	@Nonnull
-	public abstract OrderRootType getOrderRootType();
+    @Nonnull
+    public abstract OrderRootType getOrderRootType();
 }

@@ -32,57 +32,48 @@ import java.util.List;
  * @author VISTALL
  * @since 9:57/16.06.13
  */
-public class IdeaModuleTableModel implements IdeaParseableModel
-{
-	private static final Logger LOGGER = Logger.getInstance(IdeaModuleTableModel.class);
+public class IdeaModuleTableModel implements IdeaParseableModel {
+    private static final Logger LOGGER = Logger.getInstance(IdeaModuleTableModel.class);
 
-	private final List<IdeaModuleModel> myModules = new ArrayList<IdeaModuleModel>();
+    private final List<IdeaModuleModel> myModules = new ArrayList<IdeaModuleModel>();
 
-	@Override
-	public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir)
-	{
-		try
-		{
-			File modulesFile = new File(ideaProjectDir, "modules.xml");
-			if(!modulesFile.exists())
-			{
-				return;
-			}
+    @Override
+    public void load(IdeaProjectModel ideaProjectModel, File ideaProjectDir) {
+        try {
+            File modulesFile = new File(ideaProjectDir, "modules.xml");
+            if (!modulesFile.exists()) {
+                return;
+            }
 
-			final Document document = ideaProjectModel.loadDocument(modulesFile);
+            final Document document = ideaProjectModel.loadDocument(modulesFile);
 
-			XPathExpression<Element> xpathExpression = XPathFactory.instance().compile("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*", Filters.element());
+            XPathExpression<Element> xpathExpression = XPathFactory.instance().compile("/project[@version='4']/component[@name='ProjectModuleManager']/modules/*", Filters.element());
 
-			//noinspection unchecked
-			final List<Element> list = xpathExpression.evaluate(document);
+            //noinspection unchecked
+            final List<Element> list = xpathExpression.evaluate(document);
 
-			for(Element element : list)
-			{
-				String filepath = element.getAttributeValue("filepath");
-				if(filepath == null)
-				{
-					continue;
-				}
+            for (Element element : list) {
+                String filepath = element.getAttributeValue("filepath");
+                if (filepath == null) {
+                    continue;
+                }
 
-				File file = new File(filepath);
-				if(!file.exists())
-				{
-					continue;
-				}
+                File file = new File(filepath);
+                if (!file.exists()) {
+                    continue;
+                }
 
-				final IdeaModuleModel moduleModel = new IdeaModuleModel(file, element.getAttributeValue("group"));
-				moduleModel.load(ideaProjectModel, ideaProjectDir);
-				myModules.add(moduleModel);
-			}
-		}
-		catch(JDOMException | IOException e)
-		{
-			LOGGER.error(e);
-		}
-	}
+                final IdeaModuleModel moduleModel = new IdeaModuleModel(file, element.getAttributeValue("group"));
+                moduleModel.load(ideaProjectModel, ideaProjectDir);
+                myModules.add(moduleModel);
+            }
+        }
+        catch (JDOMException | IOException e) {
+            LOGGER.error(e);
+        }
+    }
 
-	public List<IdeaModuleModel> getModules()
-	{
-		return myModules;
-	}
+    public List<IdeaModuleModel> getModules() {
+        return myModules;
+    }
 }

@@ -19,17 +19,14 @@ package consulo.idea.model.orderEnties;
  * @author VISTALL
  * @since 10:18/16.06.13
  */
-public class ProjectLibraryIdeaOrderEntryModel extends IdeaOrderEntryModel
-{
-	private final String myLibraryName;
+public class ProjectLibraryIdeaOrderEntryModel extends IdeaOrderEntryModel {
+    private final String myLibraryName;
 
-	public ProjectLibraryIdeaOrderEntryModel(String libraryName)
-	{
-		myLibraryName = libraryName;
-	}
+    public ProjectLibraryIdeaOrderEntryModel(String libraryName) {
+        myLibraryName = libraryName;
+    }
 
-	public String getLibraryName()
-	{
-		return myLibraryName;
-	}
+    public String getLibraryName() {
+        return myLibraryName;
+    }
 }

@@ -17,71 +17,58 @@ package consulo.idea.model;
 
 import consulo.util.collection.LinkedMultiMap;
 import consulo.util.collection.MultiMap;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
+import org.jdom.Element;
 
 /**
  * @author VISTALL
  * @since 9:47/16.06.13
  */
-public class IdeaLibraryModel
-{
-	private final MultiMap<IdeaOrderRootType, String> myOrderRoots = new LinkedMultiMap<IdeaOrderRootType, String>();
-	private String myName;
+public class IdeaLibraryModel {
+    private final MultiMap<IdeaOrderRootType, String> myOrderRoots = new LinkedMultiMap<IdeaOrderRootType, String>();
+    private String myName;
 
-	public IdeaLibraryModel()
-	{
-	}
+    public IdeaLibraryModel() {
+    }
 
-	public void load(IdeaProjectModel ideaProjectModel, Element element)
-	{
-		final Element libraryElement = element.getChild("library");
+    public void load(IdeaProjectModel ideaProjectModel, Element element) {
+        final Element libraryElement = element.getChild("library");
 
-		myName = libraryElement.getAttributeValue("name");
-		for(Element libraryEntry : libraryElement.getChildren())
-		{
-			final String libraryEntryName = libraryEntry.getName();
+        myName = libraryElement.getAttributeValue("name");
+        for (Element libraryEntry : libraryElement.getChildren()) {
+            final String libraryEntryName = libraryEntry.getName();
 
-			IdeaOrderRootType orderRootType = null;
-			try
-			{
-				orderRootType = IdeaOrderRootType.valueOf(libraryEntryName);
-			}
-			catch(IllegalArgumentException ignored)
-			{
-			}
+            IdeaOrderRootType orderRootType = null;
+            try {
+                orderRootType = IdeaOrderRootType.valueOf(libraryEntryName);
+            }
+            catch (IllegalArgumentException ignored) {
+            }
 
-			if(orderRootType == null)
-			{
-				continue;
-			}
-			parse(libraryEntry, orderRootType);
-		}
-	}
+            if (orderRootType == null) {
+                continue;
+            }
+            parse(libraryEntry, orderRootType);
+        }
+    }
 
-	private void parse(Element element, @Nonnull IdeaOrderRootType orderRootType)
-	{
-		for(Element child : element.getChildren())
-		{
-			final String name = child.getName();
-			if("root".equals(name))
-			{
-				final String url = child.getAttributeValue("url");
+    private void parse(Element element, @Nonnull IdeaOrderRootType orderRootType) {
+        for (Element child : element.getChildren()) {
+            final String name = child.getName();
+            if ("root".equals(name)) {
+                final String url = child.getAttributeValue("url");
 
-				myOrderRoots.putValue(orderRootType, url);
-			}
-		}
-	}
+                myOrderRoots.putValue(orderRootType, url);
+            }
+        }
+    }
 
-	@Nonnull
-	public MultiMap<IdeaOrderRootType, String> getOrderRoots()
-	{
-		return myOrderRoots;
-	}
+    @Nonnull
+    public MultiMap<IdeaOrderRootType, String> getOrderRoots() {
+        return myOrderRoots;
+    }
 
-	public String getName()
-	{
-		return myName;
-	}
+    public String getName() {
+        return myName;
+    }
 }

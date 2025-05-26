@@ -22,30 +22,25 @@ import java.util.List;
  * @author VISTALL
  * @since 10:08/16.06.13
  */
-public class IdeaContentEntryModel
-{
-	private final String myUrl;
-	private List<IdeaContentFolderModel> myContentFolderTypes = new ArrayList<IdeaContentFolderModel>();
+public class IdeaContentEntryModel {
+    private final String myUrl;
+    private List<IdeaContentFolderModel> myContentFolderTypes = new ArrayList<IdeaContentFolderModel>();
 
-	public IdeaContentEntryModel(String url)
-	{
-		myUrl = url;
-	}
+    public IdeaContentEntryModel(String url) {
+        myUrl = url;
+    }
 
-	public String getUrl()
-	{
-		return myUrl;
-	}
+    public String getUrl() {
+        return myUrl;
+    }
 
-	public List<IdeaContentFolderModel> getContentFolders()
-	{
-		return myContentFolderTypes;
-	}
+    public List<IdeaContentFolderModel> getContentFolders() {
+        return myContentFolderTypes;
+    }
 
-	public IdeaContentFolderModel addFolder(String url)
-	{
-		IdeaContentFolderModel e = new IdeaContentFolderModel(url);
-		myContentFolderTypes.add(e);
-		return e;
-	}
+    public IdeaContentFolderModel addFolder(String url) {
+        IdeaContentFolderModel e = new IdeaContentFolderModel(url);
+        myContentFolderTypes.add(e);
+        return e;
+    }
 }

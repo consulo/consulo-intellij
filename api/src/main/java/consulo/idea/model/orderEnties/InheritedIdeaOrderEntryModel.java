@@ -19,6 +19,5 @@ package consulo.idea.model.orderEnties;
  * @author VISTALL
  * @since 10:15/16.06.13
  */
-public class InheritedIdeaOrderEntryModel extends IdeaOrderEntryModel
-{
+public class InheritedIdeaOrderEntryModel extends IdeaOrderEntryModel {
 }

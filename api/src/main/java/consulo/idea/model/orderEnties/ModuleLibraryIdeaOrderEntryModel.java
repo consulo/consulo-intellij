@@ -21,17 +21,14 @@ import consulo.idea.model.IdeaLibraryModel;
  * @author VISTALL
  * @since 10:17/16.06.13
  */
-public class ModuleLibraryIdeaOrderEntryModel extends IdeaOrderEntryModel
-{
-	private final IdeaLibraryModel myLibraryModel;
+public class ModuleLibraryIdeaOrderEntryModel extends IdeaOrderEntryModel {
+    private final IdeaLibraryModel myLibraryModel;
 
-	public ModuleLibraryIdeaOrderEntryModel(IdeaLibraryModel libraryModel)
-	{
-		myLibraryModel = libraryModel;
-	}
+    public ModuleLibraryIdeaOrderEntryModel(IdeaLibraryModel libraryModel) {
+        myLibraryModel = libraryModel;
+    }
 
-	public IdeaLibraryModel getLibraryModel()
-	{
-		return myLibraryModel;
-	}
+    public IdeaLibraryModel getLibraryModel() {
+        return myLibraryModel;
+    }
 }

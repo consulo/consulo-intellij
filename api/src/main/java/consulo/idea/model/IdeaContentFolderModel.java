@@ -20,17 +20,14 @@ package consulo.idea.model;
  * @author VISTALL
  * @since 25.08.2015
  */
-public class IdeaContentFolderModel extends IdeaPropertyHolderModel<IdeaContentFolderModel>
-{
-	private String myUrl;
+public class IdeaContentFolderModel extends IdeaPropertyHolderModel<IdeaContentFolderModel> {
+    private String myUrl;
 
-	public IdeaContentFolderModel(String url)
-	{
-		myUrl = url;
-	}
+    public IdeaContentFolderModel(String url) {
+        myUrl = url;
+    }
 
-	public String getUrl()
-	{
-		return myUrl;
-	}
+    public String getUrl() {
+        return myUrl;
+    }
 }
