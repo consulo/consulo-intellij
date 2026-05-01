@@ -16,13 +16,13 @@
 
 package consulo.idea.impl.util.projectWizard;
 
-import consulo.ide.moduleImport.ModuleImportContext;
 import consulo.idea.impl.IdeaConstants;
 import consulo.idea.model.IdeaModuleModel;
 import consulo.idea.model.IdeaModuleTableModel;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
+import consulo.module.creation.importing.ModuleImportContext;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;

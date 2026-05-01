@@ -20,98 +20,84 @@ import com.intellij.java.language.LanguageLevel;
 import com.intellij.java.language.projectRoots.JavaSdkType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
-import consulo.ide.setting.ShowSettingsUtil;
+import consulo.content.bundle.SdkModelFactory;
 import consulo.idea.model.IdeaProjectModel;
 import consulo.idea.model.IdeaProjectRootModel;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
 import consulo.module.ui.awt.SdkComboBox;
 import consulo.ui.ex.awt.*;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 25.08.2015
  */
-public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel
-{
-	private SdkComboBox mySdkComboBox;
-	private ComboBox<LanguageLevel> myLanguageLevelBox;
-	private IdeaProjectModel myIdeaProjectModel;
+public class JavaConfigurationPanel implements IdeaModuleTypeConfigurationPanel {
+    private SdkComboBox mySdkComboBox;
+    private ComboBox<LanguageLevel> myLanguageLevelBox;
+    private IdeaProjectModel myIdeaProjectModel;
 
-	public JavaConfigurationPanel(IdeaProjectModel ideaProjectModel)
-	{
-		myIdeaProjectModel = ideaProjectModel;
-	}
+    public JavaConfigurationPanel(IdeaProjectModel ideaProjectModel) {
+        myIdeaProjectModel = ideaProjectModel;
+    }
 
-	@Nonnull
-	@Override
-	public JComponent getComponent()
-	{
-		SdkModel model = ShowSettingsUtil.getInstance().getSdksModel();
+    @Nonnull
+    @Override
+    public JComponent getComponent() {
+        SdkModel model = SdkModelFactory.getInstance().getOrCreateModel();
 
-		mySdkComboBox = new SdkComboBox(model, it -> it instanceof JavaSdkType, true);
+        mySdkComboBox = new SdkComboBox(model, it -> it instanceof JavaSdkType, true);
 
-		IdeaProjectRootModel projectRootModel = myIdeaProjectModel.getInstance(IdeaProjectRootModel.class);
+        IdeaProjectRootModel projectRootModel = myIdeaProjectModel.getInstance(IdeaProjectRootModel.class);
 
-		String jdkProperty = projectRootModel.getProperty("project-jdk-name");
-		if(jdkProperty != null)
-		{
-			Sdk jdk = model.findSdk(jdkProperty);
-			if(jdk == null)
-			{
-				mySdkComboBox.setInvalidSdk(jdkProperty);
-			}
-			else
-			{
-				mySdkComboBox.setSelectedSdk(jdk);
-			}
-		}
+        String jdkProperty = projectRootModel.getProperty("project-jdk-name");
+        if (jdkProperty != null) {
+            Sdk jdk = model.findSdk(jdkProperty);
+            if (jdk == null) {
+                mySdkComboBox.setInvalidSdk(jdkProperty);
+            }
+            else {
+                mySdkComboBox.setSelectedSdk(jdk);
+            }
+        }
 
-		myLanguageLevelBox = new ComboBox<>(LanguageLevel.values());
-		myLanguageLevelBox.setSelectedItem(LanguageLevel.HIGHEST);
-		myLanguageLevelBox.setRenderer(new ColoredListCellRenderer<LanguageLevel>()
-		{
-			@Override
-			protected void customizeCellRenderer(@Nonnull JList jList, LanguageLevel value, int i, boolean b, boolean b1)
-			{
-				append(value.getDescription().get());
-			}
-		});
+        myLanguageLevelBox = new ComboBox<>(LanguageLevel.values());
+        myLanguageLevelBox.setSelectedItem(LanguageLevel.HIGHEST);
+        myLanguageLevelBox.setRenderer(new ColoredListCellRenderer<LanguageLevel>() {
+            @Override
+            protected void customizeCellRenderer(@Nonnull JList jList, LanguageLevel value, int i, boolean b, boolean b1) {
+                append(value.getDescription().get());
+            }
+        });
 
-		String languageLevelProperty = projectRootModel.getProperty("languageLevel");
-		if(languageLevelProperty != null)
-		{
-			try
-			{
-				LanguageLevel languageLevel = LanguageLevel.valueOf(languageLevelProperty);
-				myLanguageLevelBox.setSelectedItem(languageLevel);
+        String languageLevelProperty = projectRootModel.getProperty("languageLevel");
+        if (languageLevelProperty != null) {
+            try {
+                LanguageLevel languageLevel = LanguageLevel.valueOf(languageLevelProperty);
+                myLanguageLevelBox.setSelectedItem(languageLevel);
 
-			}
-			catch(IllegalArgumentException ignored)
-			{
-			}
-		}
+            }
+            catch (IllegalArgumentException ignored) {
+            }
+        }
 
-		VerticalLayoutPanel verticalLayoutPanel = JBUI.Panels.verticalPanel();
-		verticalLayoutPanel.addComponent(LabeledComponent.create(mySdkComboBox, "Java Project SDK"));
-		verticalLayoutPanel.addComponent(LabeledComponent.create(myLanguageLevelBox, "Java Language Level"));
-		addOtherComponents(verticalLayoutPanel, model);
-		return verticalLayoutPanel;
-	}
+        VerticalLayoutPanel verticalLayoutPanel = JBUI.Panels.verticalPanel();
+        verticalLayoutPanel.addComponent(LabeledComponent.create(mySdkComboBox, "Java Project SDK"));
+        verticalLayoutPanel.addComponent(LabeledComponent.create(myLanguageLevelBox, "Java Language Level"));
+        addOtherComponents(verticalLayoutPanel, model);
+        return verticalLayoutPanel;
+    }
 
-	protected void addOtherComponents(VerticalLayoutPanel panel, SdkModel projectSdksModel)
-	{
-	}
+    protected void addOtherComponents(VerticalLayoutPanel panel, SdkModel projectSdksModel) {
+    }
 
-	public SdkComboBox getSdkComboBox()
-	{
-		return mySdkComboBox;
-	}
+    public SdkComboBox getSdkComboBox() {
+        return mySdkComboBox;
+    }
 
-	public ComboBox getLanguageLevelBox()
-	{
-		return myLanguageLevelBox;
-	}
+    public ComboBox getLanguageLevelBox() {
+        return myLanguageLevelBox;
+    }
 }

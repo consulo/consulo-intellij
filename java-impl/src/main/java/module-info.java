@@ -5,7 +5,6 @@
 module consulo.intellij.java.impl
 {
 	requires consulo.application.content.api;
-	requires consulo.ide.api;
 	requires consulo.module.api;
 	requires consulo.module.content.api;
 	requires consulo.module.ui.api;
