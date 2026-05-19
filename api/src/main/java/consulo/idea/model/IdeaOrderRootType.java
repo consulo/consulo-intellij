@@ -30,25 +30,25 @@ public enum IdeaOrderRootType {
     CLASSES {
         @Nonnull
         @Override
-        public OrderRootType getOrderRootType() {
-            return BinariesOrderRootType.getInstance();
+        public String getOrderRootType() {
+            return BinariesOrderRootType.ID;
         }
     },
     DOCUMENTATION {
         @Nonnull
         @Override
-        public OrderRootType getOrderRootType() {
-            return DocumentationOrderRootType.getInstance();
+        public String getOrderRootType() {
+            return DocumentationOrderRootType.ID;
         }
     },
     SOURCES {
         @Nonnull
         @Override
-        public OrderRootType getOrderRootType() {
-            return SourcesOrderRootType.getInstance();
+        public String getOrderRootType() {
+            return SourcesOrderRootType.ID;
         }
     };
 
     @Nonnull
-    public abstract OrderRootType getOrderRootType();
+    public abstract String getOrderRootType();
 }
