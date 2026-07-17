@@ -15,9 +15,9 @@
  */
 package consulo.idea.impl.util.projectWizard;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.WriteAction;
+import consulo.application.concurrent.coroutine.ReadLock;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.base.GeneratedContentFolderPropertyProvider;
 import consulo.content.library.Library;
@@ -52,12 +52,14 @@ import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -110,126 +112,138 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
         }
     }
 
-    @RequiredReadAction
     @Override
-    public void process(@Nonnull IdeaImportContext context, @Nonnull Project project, @Nonnull ModifiableModuleModel newModel, @Nonnull Consumer<Module> consumer) {
+    public Coroutine<Object, Object> process(@Nonnull IdeaImportContext context, @Nonnull Project project, @Nonnull ModifiableModuleModel newModel, @Nonnull Consumer<Module> consumer) {
         IdeaProjectModel ideaProjectModel = context.getIdeaProjectModel();
 
         if (ideaProjectModel == null) {
-            return;
+            return Coroutine.empty();
         }
 
-        List<IdeaModuleModel> ideaModuleModels = ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules();
+        return ReadLock.apply(i -> {
+                List<Runnable> toWriteData = new ArrayList<>();
 
-        Map<String, IdeaModuleTypeConfigurationPanel> map = context.getConfiguration();
+                List<IdeaModuleModel> ideaModuleModels = ideaProjectModel.getInstance(IdeaModuleTableModel.class).getModules();
 
-        for (IdeaModuleModel ideaModuleModel : ideaModuleModels) {
-            File moduleFile = ideaModuleModel.getFile();
+                Map<String, IdeaModuleTypeConfigurationPanel> map = context.getConfiguration();
 
-            String nameWithoutExtension = FileUtil.getNameWithoutExtension(moduleFile);
+                for (IdeaModuleModel ideaModuleModel : ideaModuleModels) {
+                    File moduleFile = ideaModuleModel.getFile();
 
-            List<IdeaContentEntryModel> contentEntries = ideaModuleModel.getContentEntries();
-            String modulePath = null;
-            if (!contentEntries.isEmpty()) {
-                modulePath = VirtualFileUtil.urlToPath(contentEntries.get(0).getUrl());
-            }
+                    String nameWithoutExtension = FileUtil.getNameWithoutExtension(moduleFile);
 
-            Module module = newModel.newModule(nameWithoutExtension, modulePath);
-
-            consumer.accept(module);
-
-            final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-
-            String group = ideaModuleModel.getGroup();
-            if (group != null) {
-                newModel.setModuleGroupPath(module, group.split("/"));
-            }
-
-            for (IdeaContentEntryModel ideaContentEntryModel : contentEntries) {
-                ContentEntry contentEntry = modifiableModel.addContentEntry(ideaContentEntryModel.getUrl());
-
-                for (IdeaContentFolderModel entry : ideaContentEntryModel.getContentFolders()) {
-                    ContentFolderTypeProvider provider = ProductionContentFolderTypeProvider.getInstance();
-                    if (entry.getBoolProperty("isTestSource")) {
-                        provider = TestContentFolderTypeProvider.getInstance();
+                    List<IdeaContentEntryModel> contentEntries = ideaModuleModel.getContentEntries();
+                    String modulePath = null;
+                    if (!contentEntries.isEmpty()) {
+                        modulePath = VirtualFileUtil.urlToPath(contentEntries.get(0).getUrl());
                     }
 
-                    String type = entry.getProperty("type");
-                    if ("java-resource".equals(type)) {
-                        provider = ProductionResourceContentFolderTypeProvider.getInstance();
+                    Module module = newModel.newModule(nameWithoutExtension, modulePath);
+
+                    consumer.accept(module);
+
+                    final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+
+                    String group = ideaModuleModel.getGroup();
+                    if (group != null) {
+                        newModel.setModuleGroupPath(module, group.split("/"));
                     }
-                    else if ("java-test-resource".equals(type)) {
-                        provider = TestResourceContentFolderTypeProvider.getInstance();
+
+                    for (IdeaContentEntryModel ideaContentEntryModel : contentEntries) {
+                        ContentEntry contentEntry = modifiableModel.addContentEntry(ideaContentEntryModel.getUrl());
+
+                        for (IdeaContentFolderModel entry : ideaContentEntryModel.getContentFolders()) {
+                            ContentFolderTypeProvider provider = ProductionContentFolderTypeProvider.getInstance();
+                            if (entry.getBoolProperty("isTestSource")) {
+                                provider = TestContentFolderTypeProvider.getInstance();
+                            }
+
+                            String type = entry.getProperty("type");
+                            if ("java-resource".equals(type)) {
+                                provider = ProductionResourceContentFolderTypeProvider.getInstance();
+                            }
+                            else if ("java-test-resource".equals(type)) {
+                                provider = TestResourceContentFolderTypeProvider.getInstance();
+                            }
+
+                            ContentFolder contentFolder = contentEntry.addFolder(entry.getUrl(), provider);
+
+                            if (entry.getBoolProperty("generated")) {
+                                contentFolder.setPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED, Boolean.TRUE);
+                            }
+                        }
                     }
 
-                    ContentFolder contentFolder = contentEntry.addFolder(entry.getUrl(), provider);
+                    for (IdeaOrderEntryModel orderEntryModel : ideaModuleModel.getOrderEntries()) {
+                        OrderEntry orderEntry = null;
+                        if (orderEntryModel instanceof ModuleIdeaOrderEntryModel) {
+                            orderEntry = modifiableModel.addInvalidModuleEntry(((ModuleIdeaOrderEntryModel) orderEntryModel).getModuleName());
+                        }
+                        else if (orderEntryModel instanceof ProjectLibraryIdeaOrderEntryModel) {
+                            orderEntry = modifiableModel.addInvalidLibrary(((ProjectLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryName(), "project");
+                        }
+                        else if (orderEntryModel instanceof ModuleLibraryIdeaOrderEntryModel) {
+                            IdeaLibraryModel libraryModel = ((ModuleLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryModel();
 
-                    if (entry.getBoolProperty("generated")) {
-                        contentFolder.setPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED, Boolean.TRUE);
+                            Library library = modifiableModel.getModuleLibraryTable().createLibrary(libraryModel.getName());
+
+                            convertLibrary(library, libraryModel, toWriteData);
+
+                            orderEntry = modifiableModel.findLibraryOrderEntry(library);
+                        }
+
+                        //noinspection ConstantConditions
+                        if (orderEntry instanceof ExportableOrderEntry) {
+                            ((ExportableOrderEntry) orderEntry).setExported(orderEntryModel.isExported());
+                        }
                     }
-                }
-            }
 
-            for (IdeaOrderEntryModel orderEntryModel : ideaModuleModel.getOrderEntries()) {
-                OrderEntry orderEntry = null;
-                if (orderEntryModel instanceof ModuleIdeaOrderEntryModel) {
-                    orderEntry = modifiableModel.addInvalidModuleEntry(((ModuleIdeaOrderEntryModel) orderEntryModel).getModuleName());
-                }
-                else if (orderEntryModel instanceof ProjectLibraryIdeaOrderEntryModel) {
-                    orderEntry = modifiableModel.addInvalidLibrary(((ProjectLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryName(), "project");
-                }
-                else if (orderEntryModel instanceof ModuleLibraryIdeaOrderEntryModel) {
-                    IdeaLibraryModel libraryModel = ((ModuleLibraryIdeaOrderEntryModel) orderEntryModel).getLibraryModel();
+                    String moduleType = ideaModuleModel.getModuleType();
 
-                    Library library = modifiableModel.getModuleLibraryTable().createLibrary(libraryModel.getName());
-
-                    convertLibrary(library, libraryModel);
-
-                    orderEntry = modifiableModel.findLibraryOrderEntry(library);
-                }
-
-                //noinspection ConstantConditions
-                if (orderEntry instanceof ExportableOrderEntry) {
-                    ((ExportableOrderEntry) orderEntry).setExported(orderEntryModel.isExported());
-                }
-            }
-
-            String moduleType = ideaModuleModel.getModuleType();
-
-            IdeaModuleTypeConfigurationPanel ideaModuleTypeConfigurationPanel = map.get(moduleType);
-            if (ideaModuleTypeConfigurationPanel != null) {
-                IdeaModuleTypeToModuleExtensionConverter converter = IdeaModuleTypeToModuleExtensionConverter.find(moduleType);
-                assert converter != null;
-                //noinspection unchecked
-                converter.convertTypeToExtension(modifiableModel, ideaModuleModel, ideaModuleTypeConfigurationPanel);
-            }
-
-            for (ModuleExtension moduleExtension : modifiableModel.getExtensions()) {
-                if (moduleExtension instanceof ModuleExtensionWithSdk) {
-                    if (((ModuleExtensionWithSdk) moduleExtension).getInheritableSdk().isNull()) {
-                        continue;
+                    IdeaModuleTypeConfigurationPanel ideaModuleTypeConfigurationPanel = map.get(moduleType);
+                    if (ideaModuleTypeConfigurationPanel != null) {
+                        IdeaModuleTypeToModuleExtensionConverter converter = IdeaModuleTypeToModuleExtensionConverter.find(moduleType);
+                        assert converter != null;
+                        //noinspection unchecked
+                        converter.convertTypeToExtension(modifiableModel, ideaModuleModel, ideaModuleTypeConfigurationPanel);
                     }
-                    modifiableModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk<?>) moduleExtension);
+
+                    for (ModuleExtension moduleExtension : modifiableModel.getExtensions()) {
+                        if (moduleExtension instanceof ModuleExtensionWithSdk) {
+                            if (((ModuleExtensionWithSdk) moduleExtension).getInheritableSdk().isNull()) {
+                                continue;
+                            }
+                            modifiableModel.addModuleExtensionSdkEntry((ModuleExtensionWithSdk<?>) moduleExtension);
+                        }
+                    }
+
+                    toWriteData.add(modifiableModel::commit);
                 }
-            }
 
-            WriteAction.run(modifiableModel::commit);
-        }
+                LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
 
-        LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
+                LibraryTable.ModifiableModel libraryTableModifiableModel = libraryTable.getModifiableModel();
 
-        LibraryTable.ModifiableModel libraryTableModifiableModel = libraryTable.getModifiableModel();
+                for (IdeaLibraryModel ideaLibraryModel : ideaProjectModel.getInstance(IdeaProjectLibraryTableModel.class).getLibraries()) {
+                    Library library = libraryTableModifiableModel.createLibrary(ideaLibraryModel.getName());
 
-        for (IdeaLibraryModel ideaLibraryModel : ideaProjectModel.getInstance(IdeaProjectLibraryTableModel.class).getLibraries()) {
-            Library library = libraryTableModifiableModel.createLibrary(ideaLibraryModel.getName());
+                    convertLibrary(library, ideaLibraryModel, toWriteData);
+                }
 
-            convertLibrary(library, ideaLibraryModel);
-        }
+                toWriteData.add(libraryTableModifiableModel::commit);
 
-        WriteAction.run(libraryTableModifiableModel::commit);
+                return toWriteData;
+            })
+            .toCoroutine()
+            .then(WriteLock.apply((runnables, continuation) -> {
+                for (Runnable runnable : runnables) {
+                    runnable.run();
+                }
+                return null;
+            }));
     }
 
-    private static void convertLibrary(Library library, IdeaLibraryModel ideaLibraryModel) {
+    private static void convertLibrary(Library library, IdeaLibraryModel ideaLibraryModel, List<Runnable> toWrite) {
         Library.ModifiableModel modifiableModel = library.getModifiableModel();
         for (Map.Entry<IdeaOrderRootType, Collection<String>> entry : ideaLibraryModel.getOrderRoots().entrySet()) {
             for (String url : entry.getValue()) {
@@ -237,6 +251,6 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
             }
         }
 
-        WriteAction.run(modifiableModel::commit);
+        toWrite.add(modifiableModel::commit);
     }
 }
