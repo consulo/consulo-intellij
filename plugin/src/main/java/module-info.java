@@ -15,12 +15,8 @@ module consulo.intellij {
     requires consulo.project.content.api;
     requires consulo.ui.api;
     requires consulo.ui.ex.api;
-    requires consulo.ui.ex.awt.api;
     requires consulo.util.io;
     requires consulo.virtual.file.system.api;
 
     requires consulo.intellij.api;
-
-    // TODO remove in future
-    requires java.desktop;
 }

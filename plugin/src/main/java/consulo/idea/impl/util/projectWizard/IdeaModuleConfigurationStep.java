@@ -18,51 +18,37 @@ package consulo.idea.impl.util.projectWizard;
 
 import consulo.disposer.Disposable;
 import consulo.idea.util.IdeaModuleTypeConfigurationPanel;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.wizard.WizardStep;
-
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
-import javax.swing.*;
-import java.awt.*;
+
 import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 25.08.2015
  */
-public class IdeaModuleConfigurationStep implements WizardStep<IdeaImportContext>
-{
-	private Map<String, IdeaModuleTypeConfigurationPanel> myMap;
+public class IdeaModuleConfigurationStep implements WizardStep<IdeaImportContext> {
+    private final Map<String, IdeaModuleTypeConfigurationPanel> myMap;
 
-	public IdeaModuleConfigurationStep(Map<String, IdeaModuleTypeConfigurationPanel> map)
-	{
-		myMap = map;
-	}
+    public IdeaModuleConfigurationStep(Map<String, IdeaModuleTypeConfigurationPanel> map) {
+        myMap = map;
+    }
 
-	@RequiredUIAccess
-	@Nonnull
-	@Override
-	public consulo.ui.Component getComponent(@Nonnull IdeaImportContext context, @Nonnull Disposable uiDisposable)
-	{
-		throw new UnsupportedOperationException();
-	}
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Component getComponent(@Nonnull IdeaImportContext context, @Nonnull Disposable uiDisposable) {
+        VerticalLayout layout = VerticalLayout.create();
+        for (Map.Entry<String, IdeaModuleTypeConfigurationPanel> entry : myMap.entrySet()) {
+            Component component = entry.getValue().createComponent(uiDisposable);
 
-	@RequiredUIAccess
-	@Nonnull
-	@Override
-	public Component getSwingComponent(@Nonnull IdeaImportContext context, @Nonnull Disposable uiDisposable)
-	{
-		JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
-		for(Map.Entry<String, IdeaModuleTypeConfigurationPanel> entry : myMap.entrySet())
-		{
-			JPanel somePanel = new JPanel(new BorderLayout());
-			somePanel.setBorder(IdeBorderFactory.createTitledBorder(entry.getKey()));
-			somePanel.add(entry.getValue().getComponent(), BorderLayout.CENTER);
-
-			panel.add(somePanel);
-		}
-		return panel;
-	}
+            layout.add(LabeledLayout.create(LocalizeValue.of(entry.getKey()), component));
+        }
+        return layout;
+    }
 }

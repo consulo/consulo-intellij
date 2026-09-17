@@ -26,7 +26,6 @@ import consulo.idea.model.orderEnties.JdkSourceIdeaOrderEntryModel;
 import consulo.idea.util.IdeaModuleTypeToModuleExtensionConverter;
 import consulo.java.language.module.extension.JavaMutableModuleExtension;
 import consulo.module.content.layer.ModuleRootModel;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,58 +34,48 @@ import jakarta.annotation.Nullable;
  * @since 16:27/15.06.13
  */
 @ExtensionImpl
-public class JavaIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTypeToModuleExtensionConverter<JavaConfigurationPanel>
-{
-	@Nonnull
-	@Override
-	public String getModuleType()
-	{
-		return "JAVA_MODULE";
-	}
+public class JavaIdeaModuleTypeToModuleExtensionConverter extends IdeaModuleTypeToModuleExtensionConverter<JavaConfigurationPanel> {
+    @Nonnull
+    @Override
+    public String getModuleType() {
+        return "JAVA_MODULE";
+    }
 
-	@Override
-	public JavaConfigurationPanel createConfigurationPanel(@Nonnull IdeaProjectModel ideaProjectModel, @Nonnull IdeaModuleModel ideaModuleModel)
-	{
-		return new JavaConfigurationPanel(ideaProjectModel);
-	}
+    @Override
+    public JavaConfigurationPanel createConfigurationPanel(@Nonnull IdeaProjectModel ideaProjectModel, @Nonnull IdeaModuleModel ideaModuleModel) {
+        return new JavaConfigurationPanel(ideaProjectModel);
+    }
 
-	@RequiredReadAction
-	@Override
-	public void convertTypeToExtension(@Nonnull ModuleRootModel moduleRootModel, @Nonnull IdeaModuleModel ideaModuleModel, @Nullable JavaConfigurationPanel javaConfigurationPanel)
-	{
-		assert javaConfigurationPanel != null;
+    @RequiredReadAction
+    @Override
+    public void convertTypeToExtension(@Nonnull ModuleRootModel moduleRootModel,
+                                       @Nonnull IdeaModuleModel ideaModuleModel,
+                                       @Nullable JavaConfigurationPanel javaConfigurationPanel) {
+        assert javaConfigurationPanel != null;
 
-		JavaMutableModuleExtension<?> moduleExtension = enableExtensionById("java", moduleRootModel);
-		assert moduleExtension != null;
+        JavaMutableModuleExtension<?> moduleExtension = enableExtensionById("java", moduleRootModel);
+        assert moduleExtension != null;
 
-		for(IdeaOrderEntryModel ideaOrderEntryModel : ideaModuleModel.getOrderEntries())
-		{
-			if(ideaOrderEntryModel instanceof InheritedIdeaOrderEntryModel)
-			{
-				moduleExtension.getInheritableSdk().set(null, javaConfigurationPanel.getSdkComboBox().getSelectedSdkName());
-			}
-			else if(ideaOrderEntryModel instanceof JdkSourceIdeaOrderEntryModel)
-			{
-				moduleExtension.getInheritableSdk().set(null, ((JdkSourceIdeaOrderEntryModel) ideaOrderEntryModel).getJdkName());
-			}
-		}
+        for (IdeaOrderEntryModel ideaOrderEntryModel : ideaModuleModel.getOrderEntries()) {
+            if (ideaOrderEntryModel instanceof InheritedIdeaOrderEntryModel) {
+                moduleExtension.getInheritableSdk().set(null, javaConfigurationPanel.getBundleBox().getSelectedBundleName());
+            }
+            else if (ideaOrderEntryModel instanceof JdkSourceIdeaOrderEntryModel) {
+                moduleExtension.getInheritableSdk().set(null, ((JdkSourceIdeaOrderEntryModel) ideaOrderEntryModel).getJdkName());
+            }
+        }
 
-		String languageLevelProperty = ideaModuleModel.getProperty("LANGUAGE_LEVEL");
-		if(languageLevelProperty != null)
-		{
-			try
-			{
-				LanguageLevel languageLevel = LanguageLevel.valueOf(languageLevelProperty);
-				moduleExtension.getInheritableLanguageLevel().set(null, languageLevel);
-
-			}
-			catch(IllegalArgumentException ignored)
-			{
-			}
-		}
-		else
-		{
-			moduleExtension.getInheritableLanguageLevel().set(null, (LanguageLevel) javaConfigurationPanel.getLanguageLevelBox().getSelectedItem());
-		}
-	}
+        String languageLevelProperty = ideaModuleModel.getProperty("LANGUAGE_LEVEL");
+        if (languageLevelProperty != null) {
+            try {
+                LanguageLevel languageLevel = LanguageLevel.valueOf(languageLevelProperty);
+                moduleExtension.getInheritableLanguageLevel().set(null, languageLevel);
+            }
+            catch (IllegalArgumentException ignored) {
+            }
+        }
+        else {
+            moduleExtension.getInheritableLanguageLevel().set(null, javaConfigurationPanel.getLanguageLevelBox().getValue());
+        }
+    }
 }

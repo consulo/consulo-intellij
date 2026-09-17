@@ -16,16 +16,17 @@
 
 package consulo.idea.util;
 
-import javax.swing.JComponent;
-
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 /**
-* @author VISTALL
-* @since 25.08.2015
-*/
-public interface IdeaModuleTypeConfigurationPanel
-{
-	@Nonnull
-	JComponent getComponent();
+ * @author VISTALL
+ * @since 25.08.2015
+ */
+public interface IdeaModuleTypeConfigurationPanel {
+    @RequiredUIAccess
+    @Nonnull
+    Component createComponent(@Nonnull Disposable uiDisposable);
 }
