@@ -59,6 +59,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -84,9 +86,9 @@ public class IdeaProjectImportProvider implements ModuleImportProvider<IdeaImpor
     }
 
     @Override
-    public boolean canImport(@Nonnull File fileOrDirectory) {
-        if (fileOrDirectory.isDirectory()) {
-            return new File(fileOrDirectory, IdeaConstants.PROJECT_DIR).exists();
+    public boolean canImport(@Nonnull Path fileOrDirectory) {
+        if (Files.isDirectory(fileOrDirectory)) {
+            return Files.exists(fileOrDirectory.resolve(IdeaConstants.PROJECT_DIR));
         }
         return false;
     }
